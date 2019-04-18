@@ -36,6 +36,8 @@ class IndexController extends AbstractController
 //        try {
             $bot = new Client(self::SECRET_TOKEN);
 
+            dump($this->siteUrl);
+
             $bot->setWebhook($this->siteUrl);
 
             $bot->command('start', function ($message) use ($bot) {
