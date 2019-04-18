@@ -33,7 +33,7 @@ class IndexController extends AbstractController
     {
         $this->siteUrl = $request->getUri();
 
-        try {
+//        try {
             $bot = new Client(self::SECRET_TOKEN);
 
             $bot->setWebhook($this->siteUrl);
@@ -43,9 +43,9 @@ class IndexController extends AbstractController
             });
 
             $bot->run();
-        } catch (\Exception $e) {
-            return new Response($e->getMessage());
-        }
+//        } catch (\Exception $e) {
+//            return new Response($e->getMessage());
+//        }
 
         return new Response($this->siteUrl);
     }
