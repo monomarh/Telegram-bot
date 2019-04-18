@@ -40,7 +40,7 @@ class IndexController extends AbstractController
 
             $bot->setWebhook($this->siteUrl);
 
-            $bot->command('start', function ($message) use ($bot) {
+            $bot->command('start', static function ($message) use ($bot) {
                 $bot->sendMessage($message->getChat()->getId(), 'Hello');
             });
 
