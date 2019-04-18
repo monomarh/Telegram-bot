@@ -1,4 +1,7 @@
 {
+    "heroku/heroku-buildpack-php": {
+        "version": "v154"
+    },
     "psr/cache": {
         "version": "1.0.1"
     },
@@ -111,5 +114,8 @@
     },
     "symfony/yaml": {
         "version": "v4.2.5"
+    },
+    "telegram-bot/api": {
+        "version": "v2.3.13"
     }
 }
