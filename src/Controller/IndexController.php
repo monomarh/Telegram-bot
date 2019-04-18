@@ -36,6 +36,8 @@ class IndexController extends AbstractController
         try {
             $bot = new Client(self::SECRET_TOKEN);
 
+            $bot->setWebhook($this->siteUrl);
+
             $bot->command('start', function ($message) use ($bot) {
                 $bot->sendMessage($message->getChat()->getId(), 'Hello');
             });
