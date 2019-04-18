@@ -31,7 +31,7 @@ class IndexController extends AbstractController
      */
     public function indexAction(Request $request): Response
     {
-        $this->siteUrl = $request->getUri();
+        $this->siteUrl = 'https://' . $request->getHttpHost();
 
 //        try {
             $bot = new Client(self::SECRET_TOKEN);
