@@ -33,21 +33,35 @@ class IndexController extends AbstractController
     {
         $this->siteUrl = 'https://' . $request->getHttpHost();
 
-//        try {
+        try {
             $bot = new Client(self::SECRET_TOKEN);
-
-            dump($this->siteUrl);
-
             $bot->setWebhook($this->siteUrl);
 
             $bot->command('start', static function ($message) use ($bot) {
                 $bot->sendMessage($message->getChat()->getId(), 'Hello');
             });
 
+            $bot->command('name', static function ($message) use ($bot) {
+                $name = $message->getText();
+                $bot->sendMessage($message->getChat()->getId(), 'Hello' . $name);
+            });
+
+            $bot->command('help', static function ($message) use ($bot) {
+                $answer =
+<<<'ANSWER'
+Information about commands:
+
+/start - start(edit) initialization process
+/help - command list
+
+ANSWER;
+                $bot->sendMessage($message->getChat()->getId(), $answer);
+            });
+
             $bot->run();
-//        } catch (\Exception $e) {
-//            return new Response($e->getMessage());
-//        }
+        } catch (\Exception $e) {
+            return new Response($e->getMessage());
+        }
 
         return new Response($this->siteUrl);
     }
