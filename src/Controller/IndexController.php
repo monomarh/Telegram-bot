@@ -38,8 +38,18 @@ class IndexController extends AbstractController
         /** @var ManagerRegistry $entityManager */
         $entityManager = $this->getDoctrine();
 
-        $botman->hears('hello', static function(BotMan $bot) {
-            $bot->reply('Hello yourself.');
+        $botman->hears('hello', static function(BotMan $bot) use ($entityManager) {
+            /** @var UserRepository $userRepositry */
+            $userRepository = $entityManager->getRepository(User::class);
+
+            /** @var User $user */
+            $user = $userRepository->findOneBy(['userId' => $bot->getUser()->getId()]);
+
+            if ($user !== null) {
+                $bot->reply(sprintf('Hello %s.', $user->getName()));
+            } else {
+                $bot->reply('Hello anonym.');
+            }
         });
 
         $botman->hears('call me {name}', static function(BotMan $bot, string $name) use ($entityManager) {
