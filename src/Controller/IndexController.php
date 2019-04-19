@@ -37,7 +37,7 @@ class IndexController extends AbstractController
 
         /** @var ManagerRegistry $entityManager */
         $entityManager = $this->getDoctrine();
-        
+
         $botman->hears('hello', static function(BotMan $bot) {
             $bot->reply('Hello yourself.');
         });
@@ -78,6 +78,15 @@ class IndexController extends AbstractController
                 'call me "YOUR NAME" - enter your name instead of "YOUR NAME", after that the bot will call you in a new way' . PHP_EOL .
                 'i live in "YOUR CITY" - enter your city instead of "YOUR CITY", after that the bot will send the weather for this city' . PHP_EOL;
             $bot->reply(sprintf('You\'re %s years old.', $commandList));
+        });
+
+        $botman->hears('dump', static function(BotMan $bot) use ($entityManager)  {
+            $users = $entityManager->getRepository(User::class)->findAll();
+            $userNames = [];
+            foreach ($users as $user) {
+                $userNames[] = $user->getName();
+            }
+            $bot->reply(sprintf('You\'re %s years old.', implode(',', $userNames)));
         });
 
         $botman->fallback(static function(BotMan $bot) {
