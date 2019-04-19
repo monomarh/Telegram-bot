@@ -32,7 +32,7 @@ class IndexController extends AbstractController
         $botman = BotManFactory::create($config);
 
         $botman->hears('hello', static function(BotMan $bot) {
-            $bot->reply(var_export($bot, true));
+            $bot->reply($bot->getUser()->getId());
         });
 
         $botman->hears('call me {name}', static function(BotMan $bot, string $name) {
@@ -55,10 +55,10 @@ class IndexController extends AbstractController
 
         $botman->hears('help', static function(BotMan $bot) {
             $commandList =
-                'help - command list with description' . PHP_EOL .
-                'call me "YOUR NAME" - enter your name instead of "YOUR NAME", after that the bot will call you in a new way' . PHP_EOL .
+                'help - command list with description' . PHP_EOL . PHP_EOL .
+                'call me "YOUR NAME" - enter your name instead of "YOUR NAME", after that the bot will call you in a new way' . PHP_EOL . PHP_EOL .
                 'i live in "YOUR CITY" - enter your city instead of "YOUR CITY", after that the bot will send the weather for this city' . PHP_EOL;
-            $bot->reply(sprintf('You\'re %s years old.', $commandList));
+            $bot->reply($commandList);
         });
 
         $botman->fallback(static function(BotMan $bot) {
