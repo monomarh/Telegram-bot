@@ -36,8 +36,7 @@ class IndexController extends AbstractController
         });
 
         $botman->hears('call me {name}', static function(BotMan $bot, string $name) {
-            $bot->reply(sprintf('Hello %s.', $name));
-            $bot->reply(sprintf('Hello %s.', $bot->getUser()));
+            $bot->reply(sprintf('Hello %s.', implode("\n", dump($bot->getUser()))));
         });
 
         $botman->hears('i live in {city}', static function(BotMan $bot, string $city) {
