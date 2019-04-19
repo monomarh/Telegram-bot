@@ -4,7 +4,10 @@ declare(strict_types = 1);
 
 namespace App\Controller;
 
-use App\Service\BotCommand;
+use App\Entity\User;
+use App\Repository\UserRepository;
+use BotMan\BotMan\BotMan;
+use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use BotMan\BotMan\Drivers\DriverManager;
 use BotMan\BotMan\BotManFactory;
@@ -31,13 +34,54 @@ class IndexController extends AbstractController
 
         $botman = BotManFactory::create($config);
 
-        $botman->hears('hello', BotCommand::class . '@hello');
-        $botman->hears('call me {name}', BotCommand::class . '@name');
-        $botman->hears('i live in {city}', BotCommand::class . '@city');
-        $botman->hears('i was born {birthday}', BotCommand::class . '@birthday');
-        $botman->hears('help', BotCommand::class . '@help');
+        /** @var EntityManager $entityManager */
+        $entityManager = $this->getDoctrine();
 
-        $botman->fallback(BotCommand::class . '@fallback');
+        $botman->hears('hello', static function(BotMan $bot) {
+            $bot->reply('Hello yourself.');
+        });
+
+        $botman->hears('call me {name}', static function(BotMan $bot, string $name) use ($entityManager) {
+            /** @var UserRepository $userRepositry */
+            $userRepository = $entityManager->getRepository(User::class);
+
+            /** @var User $user */
+            $user = $userRepository->findOneById($bot->getUser()->getId());
+
+            if ($user !== null) {
+                $bot->reply(sprintf('Hello %s.', $user->getName()));
+            } else {
+                $newUser = new User();
+                $newUser->setName($name)->setUserId((int)$bot->getUser()->getId());
+
+                $bot->reply(sprintf('Hello %s.', $newUser->getName()));
+
+                $entityManager->persist($newUser);
+            }
+
+            $entityManager->flush();
+        });
+
+        $botman->hears('i live in {city}', static function(BotMan $bot, string $city) {
+            $bot->reply(sprintf('Weather in %s as ass.', $city));
+        });
+
+        $botman->hears('i was born {birthday}', static function(BotMan $bot, string $birthday) {
+            $birthdayDate = new \DateTime($birthday);
+            $bot->reply(sprintf('You\'re %s years old.', $birthdayDate->diff(new \DateTime())->format('%Y')));
+        });
+
+        $botman->hears('help', static function(BotMan $bot) {
+            $commandList =
+                'help - command list with description' . PHP_EOL .
+                'call me "YOUR NAME" - enter your name instead of "YOUR NAME", after that the bot will call you in a new way' . PHP_EOL .
+                'i live in "YOUR CITY" - enter your city instead of "YOUR CITY", after that the bot will send the weather for this city' . PHP_EOL;
+            $bot->reply(sprintf('You\'re %s years old.', $commandList));
+        });
+
+        $botman->fallback(static function(BotMan $bot) {
+            $bot->reply('Sorry, I did not understand these commands. Type help for command list');
+        });
 
         $botman->listen();
 
