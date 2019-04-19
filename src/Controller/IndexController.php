@@ -7,7 +7,6 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use BotMan\BotMan\BotMan;
-use Doctrine\ORM\EntityManager;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use BotMan\BotMan\Drivers\DriverManager;
@@ -45,7 +44,7 @@ class IndexController extends AbstractController
             /** @var User $user */
             $user = $userRepository->findOneBy(['userId' => $bot->getUser()->getId()]);
 
-            if ($user !== null) {
+            if ($user) {
                 $bot->reply(sprintf('Hello %s.', $user->getName()));
             } else {
                 $bot->reply('Hello anonym.');
@@ -59,7 +58,7 @@ class IndexController extends AbstractController
             /** @var User $user */
             $user = $userRepository->findOneBy(['userId' => $bot->getUser()->getId()]);
 
-            if ($user !== null) {
+            if ($user) {
                 $user->setName($name);
 
                 $bot->reply(sprintf('You change name: Hello %s.', $user->getName()));
@@ -77,30 +76,70 @@ class IndexController extends AbstractController
             $entityManager->getManager()->flush();
         });
 
-        $botman->hears('i live in {city}', static function(BotMan $bot, string $city) {
-            $bot->reply(sprintf('Weather in %s as ass.', $city));
+        $botman->hears('i live in {city}', static function(BotMan $bot, string $city) use ($entityManager) {
+            /** @var UserRepository $userRepositry */
+            $userRepository = $entityManager->getRepository(User::class);
+
+            /** @var User $user */
+            $user = $userRepository->findOneBy(['userId' => $bot->getUser()->getId()]);
+
+            if ($user !== null) {
+                if ($user->getCity()) {
+                    $user->setCity($city);
+                    $bot->reply(sprintf('You change city: you live in %s.', $user->getCity()));
+                } else {
+                    $user->setCity($city);
+                    $bot->reply(sprintf('You live in %s.', $user->getCity()));
+                }
+
+                $entityManager->getManager()->persist($user);
+            } else {
+                $bot->reply('At first, please, send "call me \'YOUR NAME\'".');
+                return;
+            }
+
+            $entityManager->getManager()->flush();
+
+            $bot->reply(sprintf('Weather in %s as ass.', $user->getCity()));
         });
 
-        $botman->hears('i was born {birthday}', static function(BotMan $bot, string $birthday) {
-            $birthdayDate = new \DateTime($birthday);
-            $bot->reply(sprintf('You\'re %s years old.', $birthdayDate->diff(new \DateTime())->format('%Y')));
+        $botman->hears('i was born {birthday}', static function(BotMan $bot, string $birthday)
+        use ($entityManager) {
+            /** @var UserRepository $userRepositry */
+            $userRepository = $entityManager->getRepository(User::class);
+
+            /** @var User $user */
+            $user = $userRepository->findOneBy(['userId' => $bot->getUser()->getId()]);
+
+            if ($user !== null) {
+                $birthdayDate = new \DateTime($birthday);
+
+                if ($user->getBirthday()) {
+                    $user->setBirthday($birthdayDate);
+                    $bot->reply(sprintf(
+                        'You corrected birthday: you\'re %s years old.',
+                        $user->getBirthday()->format('%Y')
+                    ));
+                } else {
+                    $user->setBirthday($birthdayDate);
+                    $bot->reply(sprintf('You\'re %s years old.', $user->getBirthday()->format('%Y')));
+                }
+
+                $entityManager->getManager()->persist($user);
+            } else {
+                $bot->reply('At first, please, send "call me \'YOUR NAME\'"');
+                return;
+            }
+
+            $entityManager->getManager()->flush();
         });
 
         $botman->hears('help', static function(BotMan $bot) {
             $commandList =
-                'help - command list with description' . PHP_EOL .
-                'call me "YOUR NAME" - enter your name instead of "YOUR NAME", after that the bot will call you in a new way' . PHP_EOL .
-                'i live in "YOUR CITY" - enter your city instead of "YOUR CITY", after that the bot will send the weather for this city' . PHP_EOL;
+                'help - ' . PHP_EOL . 'command list with description' . PHP_EOL . PHP_EOL .
+                'call me "YOUR NAME" - ' . PHP_EOL . 'enter your name instead of "YOUR NAME", after that the bot will call you in a new way' . PHP_EOL . PHP_EOL .
+                'i live in "YOUR CITY" - ' . PHP_EOL . 'enter your city instead of "YOUR CITY", after that the bot will send the weather for this city' . PHP_EOL . PHP_EOL;
             $bot->reply(sprintf('You\'re %s years old.', $commandList));
-        });
-
-        $botman->hears('dump', static function(BotMan $bot) use ($entityManager)  {
-            $users = $entityManager->getRepository(User::class)->findAll();
-            $userNames = [];
-            foreach ($users as $user) {
-                $userNames[] = $user->getName();
-            }
-            $bot->reply(sprintf('You\'re %s years old.', implode(',', $userNames)));
         });
 
         $botman->fallback(static function(BotMan $bot) {
