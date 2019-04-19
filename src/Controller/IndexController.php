@@ -45,7 +45,12 @@ class IndexController extends AbstractController
             $user = $userRepository->findOneBy(['userId' => $bot->getUser()->getId()]);
 
             if ($user) {
-                $bot->reply(sprintf('Hello %s.', $user->getName()));
+                $bot->reply(sprintf(
+                    'Hello %s, your live in %s and you\'re %s years old.',
+                    $user->getName(),
+                    $user->getCity() ?? '',
+                    $user->getBirthday()->format('%Y') ?? ''
+                ));
             } else {
                 $bot->reply('Hello anonym.');
             }
@@ -138,8 +143,9 @@ class IndexController extends AbstractController
             $commandList =
                 'help - ' . PHP_EOL . 'command list with description' . PHP_EOL . PHP_EOL .
                 'call me "YOUR NAME" - ' . PHP_EOL . 'enter your name instead of "YOUR NAME", after that the bot will call you in a new way' . PHP_EOL . PHP_EOL .
-                'i live in "YOUR CITY" - ' . PHP_EOL . 'enter your city instead of "YOUR CITY", after that the bot will send the weather for this city' . PHP_EOL . PHP_EOL;
-            $bot->reply(sprintf('You\'re %s years old.', $commandList));
+                'i live in "YOUR CITY" - ' . PHP_EOL . 'enter your city instead of "YOUR CITY", after that the bot will send the weather for this city' . PHP_EOL . PHP_EOL .
+                'i was born "YOUR BIRTHDAY" - ' . PHP_EOL . 'enter your birthday instead of "YOUR BIRTHDAY", after that the bot will send the remaining days in a new way' . PHP_EOL . PHP_EOL;
+            $bot->reply($commandList);
         });
 
         $botman->fallback(static function(BotMan $bot) {
