@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use BotMan\BotMan\BotMan;
 use Doctrine\ORM\EntityManager;
+use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use BotMan\BotMan\Drivers\DriverManager;
 use BotMan\BotMan\BotManFactory;
@@ -34,9 +35,9 @@ class IndexController extends AbstractController
 
         $botman = BotManFactory::create($config);
 
-        /** @var EntityManager $entityManager */
+        /** @var ManagerRegistry $entityManager */
         $entityManager = $this->getDoctrine();
-
+        
         $botman->hears('hello', static function(BotMan $bot) {
             $bot->reply('Hello yourself.');
         });
@@ -56,10 +57,10 @@ class IndexController extends AbstractController
 
                 $bot->reply(sprintf('Hello %s.', $newUser->getName()));
 
-                $entityManager->persist($newUser);
+                $entityManager->getManager()->persist($newUser);
             }
 
-            $entityManager->flush();
+            $entityManager->getManager()->flush();
         });
 
         $botman->hears('i live in {city}', static function(BotMan $bot, string $city) {
