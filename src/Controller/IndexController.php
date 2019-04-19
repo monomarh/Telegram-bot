@@ -49,7 +49,7 @@ class IndexController extends AbstractController
                     'Hello %s, your live in %s and you\'re %s years old.',
                     $user->getName(),
                     $user->getCity() ?? '',
-                    $user->getBirthday() ? $user->getBirthday()->format('%Y') : ''
+                    $user->getBirthday() ? $user->getBirthday()->diff(new \DateTime())->format('%Y') : '?'
                 ));
             } else {
                 $bot->reply('Hello anonym.');
@@ -123,11 +123,14 @@ class IndexController extends AbstractController
                     $user->setBirthday($birthdayDate);
                     $bot->reply(sprintf(
                         'You corrected birthday: you\'re %s years old.',
-                        $user->getBirthday()->format('%Y')
+                        $user->getBirthday()->diff(new \DateTime())->format('%Y')
                     ));
                 } else {
                     $user->setBirthday($birthdayDate);
-                    $bot->reply(sprintf('You\'re %s years old.', $user->getBirthday()->format('%Y')));
+                    $bot->reply(sprintf(
+                        'You\'re %s years old.',
+                        $user->getBirthday()->diff(new \DateTime())->format('%Y')
+                    ));
                 }
 
                 $entityManager->getManager()->persist($user);
