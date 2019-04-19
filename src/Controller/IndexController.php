@@ -31,8 +31,12 @@ class IndexController extends AbstractController
 
         $botman = BotManFactory::create($config);
 
-        $botman->hears('hello', static function (BotMan $bot) {
+        $botman->hears('/hello', static function(BotMan $bot) {
             $bot->reply('Hello yourself.');
+        });
+
+        $botman->fallback(static function(BotMan $bot) {
+            $bot->reply('Sorry, I did not understand these commands. Type help for command list');
         });
 
         $botman->listen();
