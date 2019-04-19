@@ -21,6 +21,8 @@ class IndexController extends AbstractController
      */
     public function indexAction(): Response
     {
+        dump($_ENV);
+
         $config = [
              'telegram' => [
                 'token' => $_ENV['SECRET_TOKEN']
