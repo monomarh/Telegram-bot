@@ -32,11 +32,11 @@ class IndexController extends AbstractController
         $botman = BotManFactory::create($config);
 
         $botman->hears('hello', static function(BotMan $bot) {
-            $bot->reply('Hello yourself.');
+            $bot->reply(var_export($bot, true));
         });
 
         $botman->hears('call me {name}', static function(BotMan $bot, string $name) {
-            $bot->reply(sprintf('Hello %s.', implode("\n", dump($bot->getUser()))));
+            $bot->reply(sprintf('Hello %s.', $name));
         });
 
         $botman->hears('i live in {city}', static function(BotMan $bot, string $city) {
