@@ -43,7 +43,7 @@ class IndexController extends AbstractController
             $bot->reply(sprintf('Weather in %s as ass.', $city));
         });
 
-        $botman->hears('i was born {$birthday}', static function(BotMan $bot, string $birthday) {
+        $botman->hears('i was born {birthday}', static function(BotMan $bot, string $birthday) {
             $birthdayDate = new \DateTime($birthday);
             $bot->reply(sprintf('You\'re %s years old.', $birthdayDate->diff(new \DateTime())->format('%Y')));
         });
