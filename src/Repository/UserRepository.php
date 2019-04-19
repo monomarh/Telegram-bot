@@ -38,7 +38,7 @@ class UserRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('user');
 
-        return $qb->add('where', $qb->expr()->eq('user.id', ':userId'))
+        return $qb->add('where', $qb->expr()->eq('user.user_id', ':userId'))
             ->setParameter('userId', $userId)
             ->getQuery()
             ->getOneOrNullResult();
