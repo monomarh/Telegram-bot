@@ -59,7 +59,7 @@ class IndexController extends AbstractController
                 'help - command list with description' . PHP_EOL .
                 'call me "YOUR NAME" - enter your name instead of "YOUR NAME", after that the bot will call you in a new way' . PHP_EOL .
                 'i live in "YOUR CITY" - enter your city instead of "YOUR CITY", after that the bot will send the weather for this city' . PHP_EOL;
-            $bot->reply(sprintf('You\'re %s years old.', $commandList);
+            $bot->reply(sprintf('You\'re %s years old.', $commandList));
         });
 
         $botman->fallback(static function(BotMan $bot) {
