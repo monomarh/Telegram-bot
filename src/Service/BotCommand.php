@@ -18,20 +18,13 @@ class BotCommand
      * @var EntityManagerInterface
      */
     private $entityManager;
-    
-    /**
-     * @var BotMan
-     */
-    private $bot;
 
     /**
-     * @param BotMan $bot
      * @param EntityManagerInterface $entityManager
      */
-    public function __construct(BotMan $bot, EntityManagerInterface $entityManager)
+    public function setEntityManager(EntityManagerInterface $entityManager): void
     {
         $this->entityManager = $entityManager;
-        $this->bot = $bot;
     }
 
     /**
