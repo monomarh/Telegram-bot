@@ -18,13 +18,20 @@ class BotCommand
      * @var EntityManagerInterface
      */
     private $entityManager;
+    
+    /**
+     * @var BotMan
+     */
+    private $bot;
 
     /**
+     * @param BotMan $bot
      * @param EntityManagerInterface $entityManager
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(BotMan $bot, EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
+        $this->bot = $bot;
     }
 
     /**
@@ -53,7 +60,7 @@ class BotCommand
             $newUser->setName($name)->setUserId((int)$bot->getUser()->getId());
 
             $bot->reply(sprintf('Hello %s.', $newUser->getName()));
-            
+
             $this->entityManager->persist($newUser);
         }
 
