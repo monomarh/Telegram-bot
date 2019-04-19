@@ -49,7 +49,7 @@ class IndexController extends AbstractController
                     'Hello %s, your live in %s and you\'re %s years old.',
                     $user->getName(),
                     $user->getCity() ?? '',
-                    $user->getBirthday()->format('%Y') ?? ''
+                    $user->getBirthday() ? $user->getBirthday()->format('%Y') : ''
                 ));
             } else {
                 $bot->reply('Hello anonym.');
