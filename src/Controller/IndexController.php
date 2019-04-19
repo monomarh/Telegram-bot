@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace App\Controller;
 
 use App\Service\BotCommand;
-use BotMan\BotMan\BotMan;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use BotMan\BotMan\Drivers\DriverManager;
 use BotMan\BotMan\BotManFactory;

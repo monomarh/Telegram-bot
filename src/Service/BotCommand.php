@@ -4,10 +4,29 @@ declare(strict_types = 1);
 
 namespace App\Service;
 
+use App\Entity\User;
+use App\Repository\UserRepository;
 use BotMan\BotMan\BotMan;
+use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * @package App\Service
+ */
 class BotCommand
 {
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    /**
+     * @param EntityManagerInterface $entityManager
+     */
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * @param BotMan $bot
      */
@@ -22,7 +41,23 @@ class BotCommand
      */
     public function name(BotMan $bot, string $name): void
     {
-        $bot->reply(sprintf('Hello %s.', $name));
+        $userRepository = $this->entityManager->getRepository(UserRepository::class);
+
+        /** @var User $user */
+        $user = $userRepository->findOneById($bot->getUser()->getId());
+
+        if ($user !== null) {
+            $bot->reply(sprintf('Hello %s.', $user->getName()));
+        } else {
+            $newUser = new User();
+            $newUser->setName($name)->setUserId((int)$bot->getUser()->getId());
+
+            $bot->reply(sprintf('Hello %s.', $newUser->getName()));
+            
+            $this->entityManager->persist($newUser);
+        }
+
+        $this->entityManager->flush();
     }
 
     /**

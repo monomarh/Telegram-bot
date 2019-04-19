@@ -51,6 +51,13 @@ class User
     private $city;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(type="integer")
+     */
+    private $userId;
+
+    /**
      * @return int|null
      */
     public function getId(): ?int
@@ -134,6 +141,26 @@ class User
     public function setCity(?string $city): self
     {
         $this->city = $city;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getUserId(): int
+    {
+        return $this->userId;
+    }
+
+    /**
+     * @param int $userId
+     *
+     * @return User
+     */
+    public function setUserId(int $userId): self
+    {
+        $this->userId = $userId;
 
         return $this;
     }
