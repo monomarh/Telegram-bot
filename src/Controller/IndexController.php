@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Controller;
 
+use App\Service\BotCommand;
 use BotMan\BotMan\BotMan;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use BotMan\BotMan\Drivers\DriverManager;
@@ -31,9 +32,7 @@ class IndexController extends AbstractController
 
         $botman = BotManFactory::create($config);
 
-        $botman->hears('hello', static function(BotMan $bot) {
-            $bot->reply($bot->getUser()->getId());
-        });
+        $botman->hears('hello', BotCommand::class);
 
         $botman->hears('call me {name}', static function(BotMan $bot, string $name) {
             $bot->reply(sprintf('Hello %s.', $name));
