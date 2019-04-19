@@ -15,14 +15,11 @@ use BotMan\Drivers\Telegram\TelegramDriver;
  */
 class IndexController extends AbstractController
 {
-    /**
-     *
-     */
     public function indexAction(): void
     {
         $config = [
              'telegram' => [
-                'token' => self::SECRET_TOKEN
+                'token' => $_ENV['SECRET_TOKEN']
              ]
         ];
 
