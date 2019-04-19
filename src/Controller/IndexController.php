@@ -50,7 +50,11 @@ class IndexController extends AbstractController
             $user = $userRepository->findOneBy(['userId' => $bot->getUser()->getId()]);
 
             if ($user !== null) {
-                $bot->reply(sprintf('Hello %s.', $user->getName()));
+                $user->setName($name);
+
+                $bot->reply(sprintf('You change name: Hello %s.', $user->getName()));
+
+                $entityManager->getManager()->persist($user);
             } else {
                 $newUser = new User();
                 $newUser->setName($name)->setUserId((int)$bot->getUser()->getId());
