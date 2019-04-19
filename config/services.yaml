@@ -26,7 +26,7 @@ services:
 
     App\Service\BotCommand:
         calls:
-            - [setEntityManager, [@doctrine.orm.default_entity_manager]]
+            - [setEntityManager, ['@doctrine.orm.default_entity_manager']]
 
 
     # add more service definitions when explicit configuration is needed
