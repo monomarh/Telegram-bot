@@ -17,15 +17,7 @@ class BotCommand
     /**
      * @var EntityManagerInterface
      */
-    private $entityManager;
-
-    /**
-     * @param EntityManagerInterface $entityManager
-     */
-    public function setEntityManager(EntityManagerInterface $entityManager): void
-    {
-        $this->entityManager = $entityManager;
-    }
+    public $entityManager;
 
     /**
      * @param BotMan $bot
