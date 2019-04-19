@@ -28,13 +28,13 @@ class UserRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param string $userId
+     * @param int $userId
      *
      * @return User|null
      *
      * @throws NonUniqueResultException
      */
-    public function findOneById(string $userId): ?User
+    public function findOneById(int $userId): ?User
     {
         $qb = $this->createQueryBuilder('user');
 
