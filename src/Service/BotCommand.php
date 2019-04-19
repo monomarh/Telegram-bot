@@ -5,19 +5,14 @@ declare(strict_types = 1);
 namespace App\Service;
 
 use App\Entity\User;
-use App\Repository\UserRepository;
 use BotMan\BotMan\BotMan;
-use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @package App\Service
  */
 class BotCommand
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    public $entityManager;
+    use UserEntityManager;
 
     /**
      * @param BotMan $bot
@@ -33,10 +28,8 @@ class BotCommand
      */
     public function name(BotMan $bot, string $name): void
     {
-        $userRepository = $this->entityManager->getRepository(UserRepository::class);
-
         /** @var User $user */
-        $user = $userRepository->findOneById($bot->getUser()->getId());
+        $user = $this->getUserById($bot->getUser()->getId());
 
         if ($user !== null) {
             $bot->reply(sprintf('Hello %s.', $user->getName()));
