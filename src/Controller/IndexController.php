@@ -46,7 +46,7 @@ class IndexController extends AbstractController
             $userRepository = $entityManager->getRepository(User::class);
 
             /** @var User $user */
-            $user = $userRepository->findOneById($bot->getUser()->getId());
+            $user = $userRepository->findOneBy(['userId' => $bot->getUser()->getId()]);
 
             if ($user !== null) {
                 $bot->reply(sprintf('Hello %s.', $user->getName()));
