@@ -9,19 +9,25 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use BotMan\BotMan\Drivers\DriverManager;
 use BotMan\BotMan\BotManFactory;
 use BotMan\Drivers\Telegram\TelegramDriver;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @package App\Controller
  */
 class IndexController extends AbstractController
 {
-    public function indexAction(): void
+    /**
+     * @return Response
+     */
+    public function indexAction(): Response
     {
         $config = [
              'telegram' => [
                 'token' => $_ENV['SECRET_TOKEN']
              ]
         ];
+
+        dump($config);
 
         DriverManager::loadDriver(TelegramDriver::class);
 
@@ -32,5 +38,7 @@ class IndexController extends AbstractController
         });
 
         $botman->listen();
+
+        return new Response('All good');
     }
 }
