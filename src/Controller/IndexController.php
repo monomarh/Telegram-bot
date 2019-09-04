@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use BotMan\BotMan\BotMan;
+use \DateTime;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use BotMan\BotMan\Drivers\DriverManager;
@@ -44,12 +45,15 @@ class IndexController extends AbstractController
             /** @var User $user */
             $user = $userRepository->findOneBy(['userId' => $bot->getUser()->getId()]);
 
+            $dayToLive = (new DateTime('now'))->diff(new DateTime('2071-12-19'))->format('%a');
+
             if ($user) {
                 $bot->reply(sprintf(
-                    'Hello %s, your live in %s and you\'re %s years old.',
+                    'Hello %s, your live in %s and you\'re %s years old. You have %s days to live',
                     $user->getName(),
-                    $user->getCity() ?? '',
-                    $user->getBirthday() ? $user->getBirthday()->diff(new \DateTime())->format('%Y') : '?'
+                    $user->getCity() ?? '?',
+                    $user->getBirthday() ? $user->getBirthday()->diff(new \DateTime())->format('%Y') : '?',
+                    $dayToLive
                 ));
             } else {
                 $bot->reply('Hello anonym.');
@@ -157,6 +161,6 @@ class IndexController extends AbstractController
 
         $botman->listen();
 
-        return new Response('All good');
+        return new Response((new DateTime('now'))->diff(new DateTime('2071-12-19'))->format('%a'));
     }
 }
