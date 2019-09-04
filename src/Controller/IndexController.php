@@ -10,9 +10,7 @@ use BotMan\BotMan\BotMan;
 use \DateTime;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use BotMan\BotMan\Drivers\DriverManager;
 use BotMan\BotMan\BotManFactory;
-use BotMan\Drivers\Telegram\TelegramDriver;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -20,10 +18,10 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class IndexController extends AbstractController
 {
-    /**
-     * @return Response
-     */
-    public function indexAction(): Response
+    /** @var BotMan */
+    private $botMan;
+
+    public function __construct()
     {
         $config = [
              'telegram' => [
@@ -31,14 +29,18 @@ class IndexController extends AbstractController
              ]
         ];
 
-        DriverManager::loadDriver(TelegramDriver::class);
+        $this->botMan = BotManFactory::create($config);
+    }
 
-        $botman = BotManFactory::create($config);
-
+    /**
+     * @return Response
+     */
+    public function indexAction(): Response
+    {
         /** @var ManagerRegistry $entityManager */
         $entityManager = $this->getDoctrine();
 
-        $botman->hears('hello', static function(BotMan $bot) use ($entityManager) {
+        $this->botMan->hears('hello', static function (BotMan $bot) use ($entityManager) {
             /** @var UserRepository $userRepositry */
             $userRepository = $entityManager->getRepository(User::class);
 
@@ -52,7 +54,7 @@ class IndexController extends AbstractController
                     'Hello %s, your live in %s and you\'re %s years old. You have %s days to live',
                     $user->getName(),
                     $user->getCity() ?? '?',
-                    $user->getBirthday() ? $user->getBirthday()->diff(new \DateTime())->format('%Y') : '?',
+                    $user->getBirthday() ? $user->getBirthday()->diff(new DateTime())->format('%Y') : '?',
                     $dayToLive
                 ));
             } else {
@@ -60,7 +62,7 @@ class IndexController extends AbstractController
             }
         });
 
-        $botman->hears('call me {name}', static function(BotMan $bot, string $name) use ($entityManager) {
+        $this->botMan->hears('call me {name}', static function (BotMan $bot, string $name) use ($entityManager) {
             /** @var UserRepository $userRepositry */
             $userRepository = $entityManager->getRepository(User::class);
 
@@ -85,7 +87,7 @@ class IndexController extends AbstractController
             $entityManager->getManager()->flush();
         });
 
-        $botman->hears('i live in {city}', static function(BotMan $bot, string $city) use ($entityManager) {
+        $this->botMan->hears('i live in {city}', static function (BotMan $bot, string $city) use ($entityManager) {
             /** @var UserRepository $userRepositry */
             $userRepository = $entityManager->getRepository(User::class);
 
@@ -112,8 +114,7 @@ class IndexController extends AbstractController
             $bot->reply(sprintf('Weather in %s as ass.', $user->getCity()));
         });
 
-        $botman->hears('i was born {birthday}', static function(BotMan $bot, string $birthday)
-        use ($entityManager) {
+        $this->botMan->hears('i was born {birthday}', static function (BotMan $bot, string $birthday) use ($entityManager) {
             /** @var UserRepository $userRepositry */
             $userRepository = $entityManager->getRepository(User::class);
 
@@ -121,19 +122,19 @@ class IndexController extends AbstractController
             $user = $userRepository->findOneBy(['userId' => $bot->getUser()->getId()]);
 
             if ($user !== null) {
-                $birthdayDate = new \DateTime($birthday);
+                $birthdayDate = new DateTime($birthday);
 
                 if ($user->getBirthday()) {
                     $user->setBirthday($birthdayDate);
                     $bot->reply(sprintf(
                         'You corrected birthday: you\'re %s years old.',
-                        $user->getBirthday()->diff(new \DateTime())->format('%Y')
+                        $user->getBirthday()->diff(new DateTime())->format('%Y')
                     ));
                 } else {
                     $user->setBirthday($birthdayDate);
                     $bot->reply(sprintf(
                         'You\'re %s years old.',
-                        $user->getBirthday()->diff(new \DateTime())->format('%Y')
+                        $user->getBirthday()->diff(new DateTime())->format('%Y')
                     ));
                 }
 
@@ -146,7 +147,7 @@ class IndexController extends AbstractController
             $entityManager->getManager()->flush();
         });
 
-        $botman->hears('help', static function(BotMan $bot) {
+        $this->botMan->hears('help', static function (BotMan $bot) {
             $commandList =
                 'help - ' . PHP_EOL . 'command list with description' . PHP_EOL . PHP_EOL .
                 'call me "YOUR NAME" - ' . PHP_EOL . 'enter your name instead of "YOUR NAME", after that the bot will call you in a new way' . PHP_EOL . PHP_EOL .
@@ -155,11 +156,11 @@ class IndexController extends AbstractController
             $bot->reply($commandList);
         });
 
-        $botman->fallback(static function(BotMan $bot) {
+        $this->botMan->fallback(static function (BotMan $bot) {
             $bot->reply('Sorry, I did not understand these commands. Type help for command list');
         });
 
-        $botman->listen();
+        $this->botMan->listen();
 
         return new Response((new DateTime('now'))->diff(new DateTime('2071-12-19'))->format('%a'));
     }
