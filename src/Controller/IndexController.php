@@ -10,7 +10,9 @@ use BotMan\BotMan\BotMan;
 use \DateTime;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use BotMan\BotMan\Drivers\DriverManager;
 use BotMan\BotMan\BotManFactory;
+use BotMan\Drivers\Telegram\TelegramDriver;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -18,7 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class IndexController extends AbstractController
 {
-    /** @var BotMan */
+    /** @var Botman */
     private $botMan;
 
     public function __construct()
@@ -28,6 +30,8 @@ class IndexController extends AbstractController
                 'token' => $_ENV['SECRET_TOKEN']
              ]
         ];
+
+        DriverManager::loadDriver(TelegramDriver::class);
 
         $this->botMan = BotManFactory::create($config);
     }
@@ -54,7 +58,7 @@ class IndexController extends AbstractController
                     'Hello %s, your live in %s and you\'re %s years old. You have %s days to live',
                     $user->getName(),
                     $user->getCity() ?? '?',
-                    $user->getBirthday() ? $user->getBirthday()->diff(new DateTime())->format('%Y') : '?',
+                    $user->getBirthday() ? $user->getBirthday()->diff(new \DateTime())->format('%Y') : '?',
                     $dayToLive
                 ));
             } else {
@@ -122,19 +126,19 @@ class IndexController extends AbstractController
             $user = $userRepository->findOneBy(['userId' => $bot->getUser()->getId()]);
 
             if ($user !== null) {
-                $birthdayDate = new DateTime($birthday);
+                $birthdayDate = new \DateTime($birthday);
 
                 if ($user->getBirthday()) {
                     $user->setBirthday($birthdayDate);
                     $bot->reply(sprintf(
                         'You corrected birthday: you\'re %s years old.',
-                        $user->getBirthday()->diff(new DateTime())->format('%Y')
+                        $user->getBirthday()->diff(new \DateTime())->format('%Y')
                     ));
                 } else {
                     $user->setBirthday($birthdayDate);
                     $bot->reply(sprintf(
                         'You\'re %s years old.',
-                        $user->getBirthday()->diff(new DateTime())->format('%Y')
+                        $user->getBirthday()->diff(new \DateTime())->format('%Y')
                     ));
                 }
 
