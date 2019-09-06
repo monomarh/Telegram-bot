@@ -57,7 +57,8 @@ class SendMessageCommand extends Command
 
         foreach ($users as $user) {
             try {
-                $this->botMan->say(sprintf(
+                $this->botMan->say(
+                    sprintf(
                         'Hello %s. You have %s days to live',
                         $user->getName(),
                         $dayToLive

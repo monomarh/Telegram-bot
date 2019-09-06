@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
+use App\Services\WeatherService;
 use BotMan\BotMan\BotMan;
 use \DateTime;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
@@ -15,15 +16,18 @@ use BotMan\BotMan\BotManFactory;
 use BotMan\Drivers\Telegram\TelegramDriver;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * @package App\Controller
- */
 class IndexController extends AbstractController
 {
     /** @var Botman */
     private $botMan;
 
-    public function __construct()
+    /** @var WeatherService */
+    private $weatherService;
+
+    /**
+     * @param WeatherService $weatherService
+     */
+    public function __construct(WeatherService $weatherService)
     {
         $config = [
              'telegram' => [
@@ -34,6 +38,7 @@ class IndexController extends AbstractController
         DriverManager::loadDriver(TelegramDriver::class);
 
         $this->botMan = BotManFactory::create($config);
+        $this->weatherService = $weatherService;
     }
 
     /**
@@ -166,6 +171,6 @@ class IndexController extends AbstractController
 
         $this->botMan->listen();
 
-        return new Response((new DateTime('now'))->diff(new DateTime('2071-12-19'))->format('%a'));
+        return new Response($this->weatherService->getTemperature());
     }
 }
