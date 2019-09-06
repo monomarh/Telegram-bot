@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace App\Command;
 
 use App\Repository\UserRepository;
+use App\Services\WeatherService;
 use BotMan\BotMan\BotMan;
 use BotMan\BotMan\BotManFactory;
 use BotMan\BotMan\Drivers\DriverManager;
@@ -17,23 +18,28 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class SendMessageCommand extends Command
 {
-    /** @var string  */
+    /** @var string */
     protected static $defaultName = 'send:message';
 
     /** @var Botman */
     private $botMan;
 
-    /** @var UserRepository  */
+    /** @var UserRepository */
     private $userRepository;
+
+    /** @var WeatherService */
+    private $weatherService;
 
     /**
      * @param UserRepository $userRepository
+     * @param WeatherService $weatherService
      */
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserRepository $userRepository, WeatherService $weatherService)
     {
         parent::__construct();
         
         $this->userRepository = $userRepository;
+        $this->weatherService = $weatherService;
     }
 
     /**
@@ -59,9 +65,10 @@ class SendMessageCommand extends Command
             try {
                 $this->botMan->say(
                     sprintf(
-                        'Hello %s. You have %s days to live',
+                        'Hello %s. You have %s days to live. Now %s outside',
                         $user->getName(),
-                        $dayToLive
+                        $dayToLive,
+                        $this->weatherService->getTemperature()
                     ),
                     $user->getUserId(),
                     TelegramDriver::class
