@@ -6,14 +6,12 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
+use App\Services\BotService;
 use App\Services\WeatherService;
 use BotMan\BotMan\BotMan;
 use \DateTime;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use BotMan\BotMan\Drivers\DriverManager;
-use BotMan\BotMan\BotManFactory;
-use BotMan\Drivers\Telegram\TelegramDriver;
 use Symfony\Component\HttpFoundation\Response;
 
 class IndexController extends AbstractController
@@ -26,19 +24,12 @@ class IndexController extends AbstractController
 
     /**
      * @param WeatherService $weatherService
+     * @param BotService $botService
      */
-    public function __construct(WeatherService $weatherService)
+    public function __construct(WeatherService $weatherService, BotService $botService)
     {
-        $config = [
-             'telegram' => [
-                'token' => $_ENV['SECRET_TOKEN']
-             ]
-        ];
-
-        DriverManager::loadDriver(TelegramDriver::class);
-
-        $this->botMan = BotManFactory::create($config);
         $this->weatherService = $weatherService;
+        $this->botMan = $botService->getBot();
     }
 
     /**

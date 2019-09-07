@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace App\Command;
 
 use App\Repository\UserRepository;
+use App\Services\BotService;
 use App\Services\WeatherService;
 use BotMan\BotMan\BotMan;
 use BotMan\BotMan\BotManFactory;
@@ -33,13 +34,18 @@ class SendMessageCommand extends Command
     /**
      * @param UserRepository $userRepository
      * @param WeatherService $weatherService
+     * @param BotService $botService
      */
-    public function __construct(UserRepository $userRepository, WeatherService $weatherService)
-    {
+    public function __construct(
+        UserRepository $userRepository,
+        WeatherService $weatherService,
+        BotService $botService
+    ) {
         parent::__construct();
         
         $this->userRepository = $userRepository;
         $this->weatherService = $weatherService;
+        $this->botMan = $botService->getBot();
     }
 
     /**
@@ -48,15 +54,6 @@ class SendMessageCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $config = [
-            'telegram' => [
-                'token' => $_ENV['SECRET_TOKEN']
-            ]
-        ];
-
-        DriverManager::loadDriver(TelegramDriver::class);
-        $this->botMan = BotManFactory::create($config);
-
         $users = $this->userRepository->findAll();
 
         $dayToLive = (new DateTime('now'))->diff(new DateTime('2071-12-19'))->format('%a');

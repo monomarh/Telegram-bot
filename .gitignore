@@ -1,5 +1,4 @@
 ###> PhpStorm ###
-/.php_cs.cache
 /.idea
 ###< PhpStorm ###
 
@@ -11,3 +10,7 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
+
+###> friends-of-php/php-cs-fixer ###
+/.php_cs.cache
+###< friends-of-php/php-cs-fixer ###
