@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace App\Services;
+namespace App\Service;
 
 use BotMan\BotMan\BotMan;
 use BotMan\BotMan\BotManFactory;

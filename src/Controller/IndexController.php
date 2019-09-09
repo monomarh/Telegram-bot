@@ -6,8 +6,8 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
-use App\Services\BotService;
-use App\Services\WeatherService;
+use App\Service\BotService;
+use App\Service\WeatherService;
 use BotMan\BotMan\BotMan;
 use \DateTime;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
@@ -162,6 +162,6 @@ class IndexController extends AbstractController
 
         $this->botMan->listen();
 
-        return new Response($this->weatherService->getTemperature());
+        return new Response(json_encode($this->weatherService->getTemperature(), JSON_FORCE_OBJECT));
     }
 }

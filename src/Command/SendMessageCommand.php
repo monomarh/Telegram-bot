@@ -5,8 +5,8 @@ declare(strict_types = 1);
 namespace App\Command;
 
 use App\Repository\UserRepository;
-use App\Services\BotService;
-use App\Services\WeatherService;
+use App\Service\BotService;
+use App\Service\WeatherService;
 use BotMan\BotMan\BotMan;
 use BotMan\BotMan\BotManFactory;
 use BotMan\BotMan\Drivers\DriverManager;
