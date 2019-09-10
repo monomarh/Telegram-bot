@@ -18,7 +18,8 @@
         "symfony/translation": "4.2.*",
         "symfony/var-dumper": "4.2.*",
         "symfony/yaml": "4.2.*",
-        "telegram-bot/api": "^2.3"
+        "telegram-bot/api": "^2.3",
+      "ext-json": "*"
     },
     "config": {
         "preferred-install": {

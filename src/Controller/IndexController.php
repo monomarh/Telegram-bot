@@ -162,6 +162,16 @@ class IndexController extends AbstractController
 
         $this->botMan->listen();
 
-        return new Response(json_encode($this->weatherService->getTemperature(), JSON_FORCE_OBJECT));
+        $summaryWeatherAtWeek = $this->weatherService->getWholeWeather()->daily->summary;
+        $dayWeather = $this->weatherService->getWholeWeather()->daily->data[0];
+
+        return new Response(sprintf(
+            '%s Probability of precipitation: %s%%. High temperature: %s℃. Low temperature: %s℃. Wind speed: %sm/s.',
+            $summaryWeatherAtWeek,
+            $dayWeather->precipProbability * 100,
+            $dayWeather->temperatureHigh,
+            $dayWeather->temperatureLow,
+            $dayWeather->windSpeed
+        ));
     }
 }

@@ -8,8 +8,6 @@ use App\Repository\UserRepository;
 use App\Service\BotService;
 use App\Service\WeatherService;
 use BotMan\BotMan\BotMan;
-use BotMan\BotMan\BotManFactory;
-use BotMan\BotMan\Drivers\DriverManager;
 use BotMan\Drivers\Telegram\TelegramDriver;
 use DateTime;
 use Exception;
@@ -56,22 +54,30 @@ class SendMessageCommand extends Command
     {
         $users = $this->userRepository->findAll();
 
-        $dayToLive = (new DateTime('now'))->diff(new DateTime('2071-12-19'))->format('%a');
+        $currentDate = new DateTime();
+        $dayToLive = $currentDate->diff(new DateTime('2071-12-19'))->format('%a');
 
         foreach ($users as $user) {
+            $summaryWeatherAtWeek = $this->weatherService->getWholeWeather()->daily->summary;
+            $todayWeather = $this->weatherService->getWholeWeather()->daily->data[0];
+
             try {
                 $this->botMan->say(
                     sprintf(
-                        'Hello %s. You have %s days to live. Now %s outside',
+                        'Hello %s. You have %s days to live. Probability of precipitation: %s%%. High temperature: %s℃. Low temperature: %s℃. Wind speed: %sm/s.',
                         $user->getName(),
                         $dayToLive,
-                        $this->weatherService->getTemperature()
-                    ),
+                        $todayWeather->precipProbability * 100,
+                        $todayWeather->temperatureHigh,
+                        $todayWeather->temperatureLow,
+                        $todayWeather->windSpeed
+                    )
+                    . (($currentDate->format('D') === 'Mon') ? sprintf(' %s', $summaryWeatherAtWeek) : ''),
                     $user->getUserId(),
                     TelegramDriver::class
                 );
             } catch (Exception $e) {
-                $output->write($e);
+                $output->writeln(json_encode($e));
             }
         }
     }

@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace App\Service;
 
-use DateTime;
 use Forecast\Forecast;
 use stdClass;
 
@@ -12,7 +11,10 @@ class WeatherService
 {
     /** @var Forecast */
     private $forecast;
-    
+
+    /** @var StdClass */
+    private $wholeWeather;
+
     public function __construct()
     {
         $this->forecast = new Forecast($_ENV['WEATHER_TOKEN']);
@@ -21,10 +23,15 @@ class WeatherService
     /**
      * @return stdClass
      */
-    public function getTemperature(): stdClass
+    public function getWholeWeather(): stdClass
     {
-        $weather = $this->forecast->get('53.9', '27.56667');
-
-        return $weather;
+        return $this->forecast->get(
+            '53.9',
+            '27.56667',
+            null,
+            [
+                'units' => 'si',
+            ]
+        );
     }
 }
