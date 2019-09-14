@@ -40,7 +40,7 @@ class IndexController extends AbstractController
         /** @var ManagerRegistry $entityManager */
         $entityManager = $this->getDoctrine();
 
-        $this->botMan->hears('hello', static function (BotMan $bot) use ($entityManager) {
+        $this->botMan->hears('/all', static function (BotMan $bot) use ($entityManager) {
             /** @var UserRepository $userRepositry */
             $userRepository = $entityManager->getRepository(User::class);
 
@@ -62,7 +62,7 @@ class IndexController extends AbstractController
             }
         });
 
-        $this->botMan->hears('call me {name}', static function (BotMan $bot, string $name) use ($entityManager) {
+        $this->botMan->hears('/name {name}', static function (BotMan $bot, string $name) use ($entityManager) {
             /** @var UserRepository $userRepositry */
             $userRepository = $entityManager->getRepository(User::class);
 
@@ -87,7 +87,7 @@ class IndexController extends AbstractController
             $entityManager->getManager()->flush();
         });
 
-        $this->botMan->hears('i live in {city}', static function (BotMan $bot, string $city) use ($entityManager) {
+        $this->botMan->hears('/city {city}', static function (BotMan $bot, string $city) use ($entityManager) {
             /** @var UserRepository $userRepositry */
             $userRepository = $entityManager->getRepository(User::class);
 
@@ -105,7 +105,7 @@ class IndexController extends AbstractController
 
                 $entityManager->getManager()->persist($user);
             } else {
-                $bot->reply('At first, please, send "call me \'YOUR NAME\'".');
+                $bot->reply('At first, please, send "/name \'YOUR NAME\'".');
                 return;
             }
 
@@ -114,7 +114,7 @@ class IndexController extends AbstractController
             $bot->reply(sprintf('Weather in %s as ass.', $user->getCity()));
         });
 
-        $this->botMan->hears('i was born {birthday}', static function (BotMan $bot, string $birthday) use ($entityManager) {
+        $this->botMan->hears('/born {birthday}', static function (BotMan $bot, string $birthday) use ($entityManager) {
             /** @var UserRepository $userRepositry */
             $userRepository = $entityManager->getRepository(User::class);
 
@@ -140,24 +140,25 @@ class IndexController extends AbstractController
 
                 $entityManager->getManager()->persist($user);
             } else {
-                $bot->reply('At first, please, send "call me \'YOUR NAME\'"');
+                $bot->reply('At first, please, send "/name \'YOUR NAME\'"');
                 return;
             }
 
             $entityManager->getManager()->flush();
         });
 
-        $this->botMan->hears('help', static function (BotMan $bot) {
+        $this->botMan->hears('/help', static function (BotMan $bot) {
             $commandList =
-                'help - ' . PHP_EOL . 'command list with description' . PHP_EOL . PHP_EOL .
-                'call me "YOUR NAME" - ' . PHP_EOL . 'enter your name instead of "YOUR NAME", after that the bot will call you in a new way' . PHP_EOL . PHP_EOL .
-                'i live in "YOUR CITY" - ' . PHP_EOL . 'enter your city instead of "YOUR CITY", after that the bot will send the weather for this city' . PHP_EOL . PHP_EOL .
-                'i was born "YOUR BIRTHDAY" - ' . PHP_EOL . 'enter your birthday instead of "YOUR BIRTHDAY" in format dd.mm.yyyy, after that the bot will send the remaining days in a new way' . PHP_EOL . PHP_EOL;
+                '/help - list of commands' . PHP_EOL .
+                '/all - sends all info' . PHP_EOL .
+                '/name "NAME" - your name' . PHP_EOL .
+                '/city "CITY" - your city for weather' . PHP_EOL .
+                '/born "BIRTHDAY" - your birthday in format dd.mm.yyyy' . PHP_EOL;
             $bot->reply($commandList);
         });
 
         $this->botMan->fallback(static function (BotMan $bot) {
-            $bot->reply('Sorry, I did not understand these commands. Type help for command list');
+            $bot->reply('Type /help for a list of commands');
         });
 
         $this->botMan->listen();
@@ -175,3 +176,4 @@ class IndexController extends AbstractController
         ));
     }
 }
+
