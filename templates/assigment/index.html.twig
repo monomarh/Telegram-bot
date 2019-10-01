@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Assigment page{% endblock %}
+
+{% block body %}
+  <div id="physicsBody" class="physicsBody">
+    <h1>Physics task</h1>
+    <div>Link to presentation: <a src="">Google presentation</a></div>
+    <div class="parameters" id="parameters">
+      <div v-for="parameter in parameters" class="parameter">
+        <div>Parameter name: ${ parameter.name }</div>
+        <div>Parameter value: ${ parameter.value }</div>
+        <input v-model="parameter.value" />
+      </div>
+    </div>
+    <div>
+      ${ answer }
+    </div>
+  </div>
+{% endblock %}
+
+{% block stylesheets %}
+  <style>
+    .physicsBody {
+      margin: 0 auto;
+      width: 80vw;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .parameters {
+      align-self: flex-start;
+      width: 100%;
+      margin-top: 5vh;
+    }
+
+    .parameter {
+      display: flex;
+      margin-bottom: 3vh;
+    }
+
+    .parameter div {
+      flex-grow: 1;
+    }
+    
+    .parameter input {
+      flex-grow: 2;
+    }
+  </style>
+{% endblock %}
+
+{% block javascripts %}
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    var app = new Vue({
+      delimiters: ['${', '}'],
+      el: '#physicsBody ',
+      data: {
+        parameters: [
+          { name: 'Ярык лох', value: 1 },
+          { name: 'Ярык лох', value: 1 },
+          { name: 'Ярык лох', value: 1 },
+        ]
+      },
+      computed: {
+        answer: function() {
+          let answer = 0;
+
+          for (parameter of this.parameters) {
+            answer += parseInt(parameter.value);
+          }
+
+          return answer;
+        }
+      }
+    });
+  </script>
+{% endblock %}

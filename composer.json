@@ -5,6 +5,7 @@
         "php": "^7.2.19",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "ext-json": "*",
         "botman/botman": "^2.4",
         "botman/driver-telegram": "^1.5",
         "doctrine/doctrine-bundle": "^1.10",
@@ -16,10 +17,10 @@
         "symfony/maker-bundle": "^1.11",
         "symfony/orm-pack": "^1.0",
         "symfony/translation": "4.2.*",
+        "symfony/twig-bundle": "4.2.*",
         "symfony/var-dumper": "4.2.*",
         "symfony/yaml": "4.2.*",
-        "telegram-bot/api": "^2.3",
-      "ext-json": "*"
+        "telegram-bot/api": "^2.3"
     },
     "config": {
         "preferred-install": {
