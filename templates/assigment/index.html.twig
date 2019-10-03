@@ -3,77 +3,136 @@
 {% block title %}Assigment page{% endblock %}
 
 {% block body %}
-  <div id="physicsBody" class="physicsBody">
-    <h1>Physics task</h1>
-    <div>Link to presentation: <a src="">Google presentation</a></div>
-    <div class="parameters" id="parameters">
-      <div v-for="parameter in parameters" class="parameter">
-        <div>Parameter name: ${ parameter.name }</div>
-        <div>Parameter value: ${ parameter.value }</div>
-        <input v-model="parameter.value" />
-      </div>
+    <div id="physicsBody" class="physicsBody">
+        <h1>Physics task</h1>
+        <div>Link to presentation: <a src="">Google presentation</a></div>
+        <div class="parameters" id="parameters">
+            <div v-for="parameter in parameters" class="parameter">
+                <div>Parameter name: ${ parameter.name }</div>
+                <div>Parameter value: ${ parameter.value }</div>
+                <input :min="parameter.min" :max="parameter.max" type="range" v-model="parameter.value"/>
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: center; align-content: center">
+            <div style="align-self: center; margin: 0 2vh">${ parameters.lambda.name } &times;</div>
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <div>${ parameters.C.name } &times; ${ parameters.U.name }<sup>2</sup></div>
+                <hr style="margin: 0; width: 100%">
+                <div>${ parameters.epsilon.name }</div>
+            </div>
+            <div style="align-self: center; margin-left: 2vh">&times; ${ parameters.t.name }</div>
+            <div style="align-self: center; margin-left: 2vh"> = </div>
+
+            <div style="align-self: center; margin: 0 2vh">${ parameters.lambda.value } &times;</div>
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <div>${ parameters.C.value } &times; ${ parameters.U.value }<sup>2</sup></div>
+                <hr style="margin: 0; width: 100%">
+                <div>${ parameters.epsilon.value }</div>
+            </div>
+            <div style="align-self: center; margin-left: 2vh">&times; ${ parameters.t.value }</div>
+            <div style="align-self: center; margin-left: 2vh"> = ${ answer } J</div>
+        </div>
+
+        <div id="container" style="width:100%; height:400px;"></div>
     </div>
-    <div>
-      ${ answer }
-    </div>
-  </div>
 {% endblock %}
 
 {% block stylesheets %}
-  <style>
-    .physicsBody {
-      margin: 0 auto;
-      width: 80vw;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
 
-    .parameters {
-      align-self: flex-start;
-      width: 100%;
-      margin-top: 5vh;
-    }
+    <style>
+        h1 {
+            margin-top: 5vh;
+        }
 
-    .parameter {
-      display: flex;
-      margin-bottom: 3vh;
-    }
+        .physicsBody {
+            margin: 0 auto;
+            width: 80vw;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-    .parameter div {
-      flex-grow: 1;
-    }
-    
-    .parameter input {
-      flex-grow: 2;
-    }
-  </style>
+        .parameters {
+            align-self: flex-start;
+            width: 100%;
+            margin-top: 5vh;
+        }
+
+        .parameter {
+            display: flex;
+            margin-bottom: 3vh;
+        }
+
+        .parameter div {
+            flex-grow: 1;
+        }
+
+        .parameter input {
+            flex-grow: 2;
+        }
+    </style>
 {% endblock %}
 
 {% block javascripts %}
-  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-  <script>
-    var app = new Vue({
-      delimiters: ['${', '}'],
-      el: '#physicsBody ',
-      data: {
-        parameters: [
-          { name: 'Ярык лох', value: 1 },
-          { name: 'Ярык лох', value: 1 },
-          { name: 'Ярык лох', value: 1 },
-        ]
-      },
-      computed: {
-        answer: function() {
-          let answer = 0;
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"></script>
 
-          for (parameter of this.parameters) {
-            answer += parseInt(parameter.value);
-          }
+    <script>
+        var app = new Vue({
+            delimiters: ['${', '}'],
+            el: '#physicsBody ',
+            data: {
+                parameters: {
+                    U: { name: 'U', value: 1, min: 0, max: 10000 },
+                    C: { name: 'C', value: 1, min: 0, max: 10000 },
+                    t: { name: 't', value: 1, min: 0, max: 10000 },
+                    lambda: { name: String.fromCharCode(parseInt('03BB', 16)), value: 1, min: 0, max: 10000 },
+                    epsilon: { name: String.fromCharCode(parseInt('03B5', 16)), value: 1, min: 1, max: 10000 },
+                }
+            },
+            computed: {
+                answer: function() {
+                    let array = new Map();
 
-          return answer;
-        }
-      }
-    });
-  </script>
+                    _.range(parseInt(this.parameters.t.value) + 1).forEach(time => array.set(this.getAnswer(time), time));
+
+                    Highcharts.chart('container', {
+                        chart: {
+                            type: 'line'
+                        },
+                        title: {
+                            text: 'Q depends on t'
+                        },
+                        xAxis: {
+                            title: {
+                                text: 't, s'
+                            },
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'Q, J'
+                            },
+                        },
+                        series: [{
+                            name: 'Q',
+                            data: [ ...array.keys() ]
+                        }]
+                    });
+
+                    return this.getAnswer(this.parameters.t.value).toFixed(2);
+                }
+            },
+            methods: {
+                getAnswer(time) {
+                    return (this.parameters.lambda.value * this.parameters.C.value * this.parameters.U.value * this.parameters.U.value * time / this.parameters.epsilon.value);
+                }
+            }
+        });
+    </script>
 {% endblock %}
