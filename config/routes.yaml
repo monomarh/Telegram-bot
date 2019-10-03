@@ -1,7 +1,0 @@
-index:
-    path: /
-    controller: App\Controller\IndexController::indexAction
-
-assigment:
-    path: /assigment
-    controller: App\Controller\AssigmentController::indexAction
