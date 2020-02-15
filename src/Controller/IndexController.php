@@ -166,7 +166,7 @@ class IndexController extends AbstractController
 
         $this->botMan->listen();
 
-        return $this->render('assigment/index.html.twig');
+        return new Response('All good');
     }
 }
 
