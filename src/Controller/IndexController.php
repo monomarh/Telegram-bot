@@ -7,7 +7,6 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Service\BotService;
-use App\Service\WeatherService;
 use BotMan\BotMan\BotMan;
 use \DateTime;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
@@ -18,18 +17,13 @@ use Symfony\Component\Routing\Annotation\Route;
 class IndexController extends AbstractController
 {
     /** @var Botman */
-    private $botMan;
-
-    /** @var WeatherService */
-    private $weatherService;
+    private Botman $botMan;
 
     /**
-     * @param WeatherService $weatherService
      * @param BotService $botService
      */
-    public function __construct(WeatherService $weatherService, BotService $botService)
+    public function __construct(BotService $botService)
     {
-        $this->weatherService = $weatherService;
         $this->botMan = $botService->getBot();
     }
 
@@ -57,7 +51,9 @@ class IndexController extends AbstractController
                     'Hello %s, your live in %s and you\'re %s years old. You have %s days to live',
                     $user->getName(),
                     $user->getCity() ?? '?',
-                    $user->getBirthday() ? $user->getBirthday()->diff(new \DateTime())->format('%Y') : '?',
+                    $user->getBirthday()
+                        ? $user->getBirthday()->diff(new \DateTime())->format('%Y')
+                        : '?',
                     $dayToLive
                 ));
             } else {
@@ -80,7 +76,8 @@ class IndexController extends AbstractController
                 $entityManager->getManager()->persist($user);
             } else {
                 $newUser = new User();
-                $newUser->setName($name)->setUserId((int)$bot->getUser()->getId());
+                $newUser->setName($name);
+                $newUser->setUserId((int)$bot->getUser()->getId());
 
                 $bot->reply(sprintf('Hello %s.', $newUser->getName()));
 
@@ -169,4 +166,3 @@ class IndexController extends AbstractController
         return new Response('All good');
     }
 }
-

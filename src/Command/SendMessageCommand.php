@@ -21,13 +21,13 @@ class SendMessageCommand extends Command
     protected static $defaultName = 'send:message';
 
     /** @var Botman */
-    private $botMan;
+    private BotMan $botMan;
 
     /** @var UserRepository */
-    private $userRepository;
+    private UserRepository $userRepository;
 
     /** @var WeatherService */
-    private $weatherService;
+    private WeatherService $weatherService;
 
     /**
      * @param UserRepository $userRepository
@@ -40,7 +40,7 @@ class SendMessageCommand extends Command
         BotService $botService
     ) {
         parent::__construct();
-        
+
         $this->userRepository = $userRepository;
         $this->weatherService = $weatherService;
         $this->botMan = $botService->getBot();
@@ -49,6 +49,8 @@ class SendMessageCommand extends Command
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
+     *
+     * @throws Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

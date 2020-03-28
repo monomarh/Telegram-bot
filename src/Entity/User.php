@@ -4,14 +4,13 @@ declare(strict_types = 1);
 
 namespace App\Entity;
 
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="Users")
  *
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- *
- * @package App\Entity
  */
 class User
 {
@@ -22,42 +21,42 @@ class User
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @var string
      *
      * @ORM\Column(type="string", length=255)
      */
-    private $name;
+    private string $name;
 
     /**
-     * @var \DateTimeInterface
+     * @var DateTimeInterface
      *
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $birthday;
+    private DateTimeInterface $birthday;
 
     /**
      * @var string
      *
      * @ORM\Column(type="string", length=4, nullable=true)
      */
-    private $locale;
+    private string $locale;
 
     /**
      * @var string
      *
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $city;
+    private string $city;
 
     /**
      * @var int
      *
      * @ORM\Column(type="integer")
      */
-    private $userId;
+    private int $userId;
 
     /**
      * @return int|null
@@ -77,34 +76,26 @@ class User
 
     /**
      * @param string $name
-     *
-     * @return User
      */
-    public function setName(string $name): self
+    public function setName(string $name): void
     {
         $this->name = $name;
-
-        return $this;
     }
 
     /**
-     * @return \DateTimeInterface|null
+     * @return DateTimeInterface|null
      */
-    public function getBirthday(): ?\DateTimeInterface
+    public function getBirthday(): ?DateTimeInterface
     {
         return $this->birthday;
     }
 
     /**
-     * @param \DateTimeInterface $birthday
-     *
-     * @return User
+     * @param DateTimeInterface $birthday
      */
-    public function setBirthday(\DateTimeInterface $birthday): self
+    public function setBirthday(DateTimeInterface $birthday): void
     {
         $this->birthday = $birthday;
-
-        return $this;
     }
 
     /**
@@ -117,14 +108,10 @@ class User
 
     /**
      * @param string|null $locale
-     *
-     * @return User
      */
-    public function setLocale(?string $locale): self
+    public function setLocale(?string $locale): void
     {
         $this->locale = $locale;
-
-        return $this;
     }
 
     /**
@@ -137,14 +124,10 @@ class User
 
     /**
      * @param string|null $city
-     *
-     * @return User
      */
-    public function setCity(?string $city): self
+    public function setCity(?string $city): void
     {
         $this->city = $city;
-
-        return $this;
     }
 
     /**
@@ -157,13 +140,9 @@ class User
 
     /**
      * @param int $userId
-     *
-     * @return User
      */
-    public function setUserId(int $userId): self
+    public function setUserId(int $userId): void
     {
         $this->userId = $userId;
-
-        return $this;
     }
 }

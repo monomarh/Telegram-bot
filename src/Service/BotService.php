@@ -12,7 +12,7 @@ use BotMan\Drivers\Telegram\TelegramDriver;
 class BotService
 {
     /** @var BotMan */
-    private $botMan;
+    private BotMan $botMan;
 
     public function __construct()
     {

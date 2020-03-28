@@ -10,10 +10,10 @@ use stdClass;
 class WeatherService
 {
     /** @var Forecast */
-    private $forecast;
+    private Forecast $forecast;
 
     /** @var StdClass */
-    private $wholeWeather;
+    private StdClass $wholeWeather;
 
     public function __construct()
     {
