@@ -10,6 +10,7 @@
         "botman/driver-telegram": "^1.5",
         "doctrine/doctrine-bundle": "^1.10",
         "guhelski/forecast-php": "^1.1",
+        "opencage/geocode": "^2.1",
         "symfony/config": "4.4.*",
         "symfony/console": "4.4.*",
         "symfony/dotenv": "4.4.*",

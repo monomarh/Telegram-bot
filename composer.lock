@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "afdb533bf3d97a3cd46237300f028fc7",
+    "content-hash": "6f90aab3b3b62ea94bb39dceffeeb60d",
     "packages": [
         {
             "name": "botman/botman",
@@ -1905,6 +1905,53 @@
                 "service proxies"
             ],
             "time": "2020-02-08T19:22:03+00:00"
+        },
+        {
+            "name": "opencage/geocode",
+            "version": "2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/OpenCageData/php-opencage-geocode.git",
+                "reference": "7fed059d27390712fd74a52daa60f36d34a5abcf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/OpenCageData/php-opencage-geocode/zipball/7fed059d27390712fd74a52daa60f36d34a5abcf",
+                "reference": "7fed059d27390712fd74a52daa60f36d34a5abcf",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~7.0",
+                "squizlabs/php_codesniffer": "^2.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "OpenCage\\Geocoder\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "OpenCage Data Limited",
+                    "email": "info@opencagedata.com",
+                    "homepage": "https://opencagedata.com"
+                }
+            ],
+            "description": "A PHP library for geocoding via the OpenCage Geocoder API",
+            "keywords": [
+                "addresses",
+                "geocode",
+                "geocoding",
+                "opencagedata"
+            ],
+            "time": "2019-05-09T22:40:38+00:00"
         },
         {
             "name": "opis/closure",
@@ -4642,5 +4689,6 @@
         "ext-iconv": "*",
         "ext-json": "*"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "1.1.0"
 }

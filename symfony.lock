@@ -111,6 +111,9 @@
     "ocramius/proxy-manager": {
         "version": "2.2.2"
     },
+    "opencage/geocode": {
+        "version": "2.1.0"
+    },
     "opis/closure": {
         "version": "3.1.6"
     },
