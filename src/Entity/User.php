@@ -45,18 +45,18 @@ class User
     private string $locale;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private string $city;
-
-    /**
      * @var int
      *
      * @ORM\Column(type="integer")
      */
-    private int $userId;
+    private int $telegramUserId;
+
+    /**
+     * @var Location
+     *
+     * @ORM\ManyToOne(targetEntity="App\Entity\Location")
+     */
+    private Location $location;
 
     /**
      * @return int|null
@@ -115,34 +115,33 @@ class User
     }
 
     /**
-     * @return string|null
-     */
-    public function getCity(): ?string
-    {
-        return $this->city;
-    }
-
-    /**
-     * @param string|null $city
-     */
-    public function setCity(?string $city): void
-    {
-        $this->city = $city;
-    }
-
-    /**
      * @return int
      */
-    public function getUserId(): int
+    public function getTelegramUserId(): int
     {
-        return $this->userId;
+        return $this->telegramUserId;
     }
 
     /**
-     * @param int $userId
+     * @param int $telegramUserId
      */
-    public function setUserId(int $userId): void
+    public function setTelegramUserId(int $telegramUserId): void
     {
-        $this->userId = $userId;
+        $this->telegramUserId = $telegramUserId;
+    }
+
+    /**
+     * @return Location|null
+     */
+    public function getLocation(): ?Location
+    {
+        return $this->location;
+    }
+    /**
+     * @param Location|null $location
+     */
+    public function setLocation(?Location $location): void
+    {
+        $this->location = $location;
     }
 }

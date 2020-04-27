@@ -50,7 +50,7 @@ class IndexController extends AbstractController
                 $bot->reply(sprintf(
                     'Hello %s, your live in %s and you\'re %s years old. You have %s days to live',
                     $user->getName(),
-                    $user->getCity() ?? '?',
+                    $user->getLocation()->getFullAddress() ?? '?',
                     $user->getBirthday()
                         ? $user->getBirthday()->diff(new \DateTime())->format('%Y')
                         : '?',
@@ -62,22 +62,19 @@ class IndexController extends AbstractController
         });
 
         $this->botMan->hears('/name {name}', static function (BotMan $bot, string $name) use ($entityManager) {
-            /** @var UserRepository $userRepositry */
-            $userRepository = $entityManager->getRepository(User::class);
-
             /** @var User $user */
-            $user = $userRepository->findOneBy(['userId' => $bot->getUser()->getId()]);
+            $user = $entityManager
+                ->getRepository(User::class)
+                ->findOneByTelegramUserId((int) $bot->getUser()->getId());
 
             if ($user) {
                 $user->setName($name);
 
                 $bot->reply(sprintf('You change name: Hello %s.', $user->getName()));
-
-                $entityManager->getManager()->persist($user);
             } else {
                 $newUser = new User();
                 $newUser->setName($name);
-                $newUser->setUserId((int)$bot->getUser()->getId());
+                $newUser->setTelegramUserId((int)$bot->getUser()->getId());
 
                 $bot->reply(sprintf('Hello %s.', $newUser->getName()));
 
@@ -88,11 +85,32 @@ class IndexController extends AbstractController
         });
 
         $this->botMan->hears('/city {city}', static function (BotMan $bot, string $city) use ($entityManager) {
-            /** @var UserRepository $userRepositry */
-            $userRepository = $entityManager->getRepository(User::class);
-
             /** @var User $user */
-            $user = $userRepository->findOneBy(['userId' => $bot->getUser()->getId()]);
+            $user = $entityManager
+                ->getRepository(User::class)
+                ->findOneByTelegramUserId((int) $bot->getUser()->getId());
+
+            if ($user !== null) {
+                if ($user->getLocation()->getCity()) {
+                    $user->setCity($city);
+                    $bot->reply(sprintf('You change city: you live in %s.', $user->getCity()));
+                } else {
+                    $user->setCity($city);
+                    $bot->reply(sprintf('You live in %s.', $user->getCity()));
+                }
+            } else {
+                $bot->reply('At first, please, setup "/name".');
+                return;
+            }
+
+            $entityManager->getManager()->flush();
+        });
+
+        $this->botMan->hears('/country {country}', static function (BotMan $bot, string $country) use ($entityManager) {
+            /** @var User $user */
+            $user = $entityManager
+                ->getRepository(User::class)
+                ->findOneByTelegramUserId((int) $bot->getUser()->getId());
 
             if ($user !== null) {
                 if ($user->getCity()) {
@@ -102,24 +120,19 @@ class IndexController extends AbstractController
                     $user->setCity($city);
                     $bot->reply(sprintf('You live in %s.', $user->getCity()));
                 }
-
-                $entityManager->getManager()->persist($user);
             } else {
                 $bot->reply('At first, please, send "/name \'YOUR NAME\'".');
                 return;
             }
 
             $entityManager->getManager()->flush();
-
-            $bot->reply(sprintf('Weather in %s as ass.', $user->getCity()));
         });
 
         $this->botMan->hears('/born {birthday}', static function (BotMan $bot, string $birthday) use ($entityManager) {
-            /** @var UserRepository $userRepositry */
-            $userRepository = $entityManager->getRepository(User::class);
-
             /** @var User $user */
-            $user = $userRepository->findOneBy(['userId' => $bot->getUser()->getId()]);
+            $user = $entityManager
+                ->getRepository(User::class)
+                ->findOneByTelegramUserId((int) $bot->getUser()->getId());
 
             if ($user !== null) {
                 $birthdayDate = new \DateTime($birthday);
@@ -137,8 +150,6 @@ class IndexController extends AbstractController
                         $user->getBirthday()->diff(new \DateTime())->format('%Y')
                     ));
                 }
-
-                $entityManager->getManager()->persist($user);
             } else {
                 $bot->reply('At first, please, send "/name \'YOUR NAME\'"');
                 return;
@@ -153,6 +164,7 @@ class IndexController extends AbstractController
                 '/all - sends all info' . PHP_EOL .
                 '/name "NAME" - your name' . PHP_EOL .
                 '/city "CITY" - your city for weather' . PHP_EOL .
+                '/city "COUNTRY" - your country for weather' . PHP_EOL .
                 '/born "BIRTHDAY" - your birthday in format dd.mm.yyyy' . PHP_EOL;
             $bot->reply($commandList);
         });

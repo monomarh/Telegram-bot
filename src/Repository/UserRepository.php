@@ -26,18 +26,18 @@ class UserRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param int $userId
+     * @param int $telegramUserId
      *
      * @return User|null
      *
      * @throws NonUniqueResultException
      */
-    public function findOneById(int $userId): ?User
+    public function findOneByTelegramUserId(int $telegramUserId): ?User
     {
         $qb = $this->createQueryBuilder('user');
 
-        return $qb->add('where', $qb->expr()->eq('user.userId', ':userId'))
-            ->setParameter('userId', $userId)
+        return $qb->add('where', $qb->expr()->eq('user.telegramUserId', ':telegramUserId'))
+            ->setParameter('telegramUserId', $telegramUserId)
             ->getQuery()
             ->getOneOrNullResult();
     }
