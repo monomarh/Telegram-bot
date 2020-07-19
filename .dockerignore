@@ -1,0 +1,9 @@
+.git/
+.gitignore
+
+.dockerignore
+docker-compose.*.yaml
+docker/php/Dockerfile.*
+
+.idea/
+.php_cs.cache
