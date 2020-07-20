@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Controller;
 
+use App\Entity\Location;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Service\BotService;
@@ -42,7 +43,7 @@ class IndexController extends AbstractController
             $userRepository = $entityManager->getRepository(User::class);
 
             /** @var User $user */
-            $user = $userRepository->findOneBy(['userId' => $bot->getUser()->getId()]);
+            $user = $userRepository->findOneByTelegramUserId((int) $bot->getUser()->getId());
 
             $dayToLive = (new DateTime('now'))->diff(new DateTime('2071-12-19'))->format('%a');
 
@@ -50,7 +51,7 @@ class IndexController extends AbstractController
                 $bot->reply(sprintf(
                     'Hello %s, your live in %s and you\'re %s years old. You have %s days to live',
                     $user->getName(),
-                    $user->getLocation()->getFullAddress() ?? '?',
+                    $user->getLocation() ? $user->getLocation()->getFullAddress() : '?',
                     $user->getBirthday()
                         ? $user->getBirthday()->diff(new \DateTime())->format('%Y')
                         : '?',
@@ -90,14 +91,20 @@ class IndexController extends AbstractController
                 ->getRepository(User::class)
                 ->findOneByTelegramUserId((int) $bot->getUser()->getId());
 
+            $location = $user->getLocation()
+                ?? $entityManager->getRepository(Location::class)->findByCity($city)
+                ?? new Location();
+
             if ($user !== null) {
-                if ($user->getLocation()->getCity()) {
-                    $user->setCity($city);
-                    $bot->reply(sprintf('You change city: you live in %s.', $user->getCity()));
+                if ($location->getCity()) {
+                    $location->setCity($city);
+                    $bot->reply(sprintf('You change city: you live in %s.', $location->getCity()));
                 } else {
-                    $user->setCity($city);
-                    $bot->reply(sprintf('You live in %s.', $user->getCity()));
+                    $location->setCity($city);
+                    $bot->reply(sprintf('You live in %s.', $location->getCity()));
                 }
+
+                $user->setLocation($location);
             } else {
                 $bot->reply('At first, please, setup "/name".');
                 return;
@@ -112,14 +119,20 @@ class IndexController extends AbstractController
                 ->getRepository(User::class)
                 ->findOneByTelegramUserId((int) $bot->getUser()->getId());
 
+            $location = $user->getLocation()
+                ?? $entityManager->getRepository(Location::class)->findByCountry($country)
+                ?? new Location();
+
             if ($user !== null) {
-                if ($user->getCity()) {
-                    $user->setCity($city);
-                    $bot->reply(sprintf('You change city: you live in %s.', $user->getCity()));
+                if ($location->getCountry()) {
+                    $location->setCountry($country);
+                    $bot->reply(sprintf('You change country: you live in %s.', $location->getCountry()));
                 } else {
-                    $user->setCity($city);
-                    $bot->reply(sprintf('You live in %s.', $user->getCity()));
+                    $location->setCountry($country);
+                    $bot->reply(sprintf('You live in %s.', $location->getCountry()));
                 }
+
+                $user->setLocation($location);
             } else {
                 $bot->reply('At first, please, send "/name \'YOUR NAME\'".');
                 return;
@@ -160,12 +173,13 @@ class IndexController extends AbstractController
 
         $this->botMan->hears('/help', static function (BotMan $bot) {
             $commandList =
-                '/help - list of commands' . PHP_EOL .
-                '/all - sends all info' . PHP_EOL .
-                '/name "NAME" - your name' . PHP_EOL .
-                '/city "CITY" - your city for weather' . PHP_EOL .
-                '/city "COUNTRY" - your country for weather' . PHP_EOL .
-                '/born "BIRTHDAY" - your birthday in format dd.mm.yyyy' . PHP_EOL;
+                '/help - Commands information' . PHP_EOL .
+                '/all - Receive all information about you' . PHP_EOL .
+                '/name - Set your name' . PHP_EOL .
+                '/city - Set your city' . PHP_EOL .
+                '/country - Set your country' . PHP_EOL .
+                '/born - Set your birthday in format dd.mm.yyyy' . PHP_EOL;
+
             $bot->reply($commandList);
         });
 

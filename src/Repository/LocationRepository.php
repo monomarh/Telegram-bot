@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Location;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\NonUniqueResultException;
 
 /**
  * @method Location|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,37 +17,45 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  */
 class LocationRepository extends ServiceEntityRepository
 {
+    /**
+     * @param ManagerRegistry $registry
+     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Location::class);
     }
 
-    // /**
-    //  * @return Location[] Returns an array of Location objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @param string $city
+     *
+     * @return Location Returns an array of Location objects
+     *
+     * @throws NonUniqueResultException
+     */
+    public function findByCity(string $city): ?Location
     {
-        return $this->createQueryBuilder('l')
-            ->andWhere('l.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('l.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $qb = $this->createQueryBuilder('location');
 
-    /*
-    public function findOneBySomeField($value): ?Location
-    {
-        return $this->createQueryBuilder('l')
-            ->andWhere('l.exampleField = :val')
-            ->setParameter('val', $value)
+        return $qb->add('where', $qb->expr()->eq('location.city', ':city'))
+            ->setParameter('city', $city)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
-    */
+
+    /**
+     * @param string $country
+     *
+     * @return Location Returns an array of Location objects
+     *
+     * @throws NonUniqueResultException
+     */
+    public function findByCountry(string $country): ?Location
+    {
+        $qb = $this->createQueryBuilder('location');
+
+        return $qb->add('where', $qb->expr()->eq('location.country', ':country'))
+            ->setParameter('country', $country)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

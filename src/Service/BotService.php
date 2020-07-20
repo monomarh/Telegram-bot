@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Service;
 
@@ -23,12 +23,15 @@ class BotService
     /**
      * @return BotMan
      */
-    public function getBot()
+    public function getBot(): BotMan
     {
         return $this->botMan;
     }
 
-    private static function getConfigs()
+    /**
+     * @return array[]
+     */
+    private static function getConfigs(): array
     {
         return [
             'telegram' => [

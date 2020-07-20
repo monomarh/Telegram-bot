@@ -2,8 +2,10 @@
 
 namespace App\Entity;
 
+use App\Service\GeocodeService;
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
+use Monolog\Logger;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\LocationRepository")
@@ -20,32 +22,32 @@ class Location
     private int $id;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private string $city;
+    private ?string $city = null;
 
     /**
-     * @var string
+     * @var string|null
      *
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private string $country;
+    private ?string $country = null;
 
     /**
-     * @var float
+     * @var float|null
      *
      * @ORM\Column(type="decimal", precision=10, scale=8, nullable=true)
      */
-    private float $latitude;
+    private ?float $latitude;
 
     /**
-     * @var float
+     * @var float|null
      *
      * @ORM\Column(type="decimal", precision=11, scale=8, nullable=true)
      */
-    private float $longitude;
+    private ?float $longitude;
 
     /**
      * @return int|null
@@ -64,9 +66,9 @@ class Location
     }
 
     /**
-     * @param string|null $city
+     * @param string $city
      */
-    public function setCity(?string $city): void
+    public function setCity(string $city): void
     {
         $this->city = $city;
     }
@@ -96,9 +98,9 @@ class Location
     }
 
     /**
-     * @param string|null $latitude
+     * @param string $latitude
      */
-    public function setLatitude(?string $latitude): void
+    public function setLatitude(string $latitude): void
     {
         $this->latitude = $latitude;
     }
@@ -112,9 +114,9 @@ class Location
     }
 
     /**
-     * @param string|null $longitude
+     * @param string $longitude
      */
-    public function setLongitude(?string $longitude): void
+    public function setLongitude(string $longitude): void
     {
         $this->longitude = $longitude;
     }
@@ -137,12 +139,24 @@ class Location
     public function setGeometry(array $geometry): void
     {
         if (!isset($geometry['latitude'], $geometry['longitude'])
-            || !isset($geometry['lat'], $geometry['lng'])
+            && !isset($geometry['lat'], $geometry['lng'])
         ) {
             throw new InvalidArgumentException('Latitude and longitude must be set');
         }
 
         $this->setLatitude($geometry['latitude'] ?? $geometry['lat']);
         $this->setLongitude($geometry['longitude'] ?? $geometry['lng']);
+    }
+
+    /**
+     *
+     */
+    public function getGeometry(): array
+    {
+        if ($this->getLatitude() === null || $this->getLongitude() === null) {
+            $this->setGeometry((new GeocodeService(new Logger('Geocode')))->getGeometry($this));
+        }
+
+        return [(float) $this->getLatitude(), (float) $this->getLongitude()];
     }
 }

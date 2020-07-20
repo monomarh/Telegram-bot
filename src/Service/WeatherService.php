@@ -29,12 +29,13 @@ class WeatherService
     public function getWholeWeather(Location $location): stdClass
     {
         return $this->forecast->get(
-            $location->getLatitude(),
-            $location->getLongitude(),
-            null,
-            [
-                'units' => 'si',
-            ],
+            ...$location->getGeometry(),
+            ...[
+                null,
+                [
+                    'units' => 'si',
+                ]
+           ],
         );
     }
 }

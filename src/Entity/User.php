@@ -31,18 +31,18 @@ class User
     private string $name;
 
     /**
-     * @var DateTimeInterface
+     * @var DateTimeInterface|null
      *
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private DateTimeInterface $birthday;
+    private ?DateTimeInterface $birthday;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(type="string", length=4, nullable=true)
      */
-    private string $locale;
+    private ?string $locale = 'en';
 
     /**
      * @var int
@@ -52,11 +52,11 @@ class User
     private int $telegramUserId;
 
     /**
-     * @var Location
+     * @var Location|null
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Location")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Location", cascade={"persist"})
      */
-    private Location $location;
+    private ?Location $location;
 
     /**
      * @return int|null
@@ -107,9 +107,9 @@ class User
     }
 
     /**
-     * @param string|null $locale
+     * @param string $locale
      */
-    public function setLocale(?string $locale): void
+    public function setLocale(string $locale): void
     {
         $this->locale = $locale;
     }
@@ -138,9 +138,9 @@ class User
         return $this->location;
     }
     /**
-     * @param Location|null $location
+     * @param Location $location
      */
-    public function setLocation(?Location $location): void
+    public function setLocation(Location $location): void
     {
         $this->location = $location;
     }
