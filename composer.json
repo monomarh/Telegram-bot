@@ -76,6 +76,7 @@
         }
     },
     "require-dev": {
-        "heroku/heroku-buildpack-php": "^154.0"
+        "heroku/heroku-buildpack-php": "^154.0",
+        "symfony/test-pack": "^1.0"
     }
 }

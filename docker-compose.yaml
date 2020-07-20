@@ -5,6 +5,7 @@ services:
         image: nginx:alpine
         depends_on:
             - php
+            - db
         ports:
             - 80:80
         volumes:
@@ -15,10 +16,12 @@ services:
         build:
             context: .
             dockerfile: ./docker/php/Dockerfile.${APP_ENV}
+        restart: on-failure
         environment:
             DATABASE_URL: postgres://${PSQL_USER}:${PSQL_PASSWORD}@db:5432/${PSQL_DATABASE}
         volumes:
             - ./:/var/www/index
+            - /var/www/index/vendor
 
     db:
         image: postgres
