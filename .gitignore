@@ -14,6 +14,7 @@
 ###> friends-of-php/php-cs-fixer ###
 /.php_cs.cache
 ###< friends-of-php/php-cs-fixer ###
+
 ###> symfony/phpunit-bridge ###
 .phpunit
 .phpunit.result.cache
