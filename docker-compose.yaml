@@ -1,0 +1,31 @@
+version: "3.7"
+
+services:
+    nginx:
+        image: nginx:alpine
+        depends_on:
+            - php
+        ports:
+            - 80:80
+        volumes:
+            - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+            - ./:/var/www/index
+
+    php:
+        build:
+            context: .
+            dockerfile: ./docker/php/Dockerfile.${APP_ENV}
+        environment:
+            DATABASE_URL: postgres://${PSQL_USER}:${PSQL_PASSWORD}@db:5432/${PSQL_DATABASE}
+        volumes:
+            - ./:/var/www/index
+
+    db:
+        image: postgres
+        restart: always
+        environment:
+            POSTGRES_PASSWORD: ${PSQL_PASSWORD}
+        ports:
+            - 5432:5432
+        volumes:
+            - ./db-data:/var/lib/postgresql/data

@@ -96,8 +96,17 @@
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
+    "laminas/laminas-code": {
+        "version": "3.4.1"
+    },
+    "laminas/laminas-eventmanager": {
+        "version": "3.2.1"
+    },
     "laminas/laminas-zendframework-bridge": {
         "version": "1.0.1"
+    },
+    "monolog/monolog": {
+        "version": "1.25.3"
     },
     "mpociot/pipeline": {
         "version": "1.0.2"
@@ -153,6 +162,9 @@
     "symfony/cache": {
         "version": "v4.2.5"
     },
+    "symfony/cache-contracts": {
+        "version": "v2.1.3"
+    },
     "symfony/config": {
         "version": "v4.2.5"
     },
@@ -189,6 +201,9 @@
     },
     "symfony/event-dispatcher": {
         "version": "v4.2.5"
+    },
+    "symfony/event-dispatcher-contracts": {
+        "version": "v1.1.9"
     },
     "symfony/filesystem": {
         "version": "v4.2.5"
@@ -245,11 +260,31 @@
     "symfony/mime": {
         "version": "v4.4.6"
     },
+    "symfony/monolog-bridge": {
+        "version": "v4.4.7"
+    },
+    "symfony/monolog-bundle": {
+        "version": "3.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.3",
+            "ref": "a89f4cd8a232563707418eea6c2da36acd36a917"
+        },
+        "files": [
+            "config/packages/dev/monolog.yaml",
+            "config/packages/prod/monolog.yaml",
+            "config/packages/test/monolog.yaml"
+        ]
+    },
     "symfony/orm-pack": {
         "version": "v1.0.6"
     },
     "symfony/polyfill-intl-idn": {
         "version": "v1.15.0"
+    },
+    "symfony/polyfill-intl-normalizer": {
+        "version": "v1.18.0"
     },
     "symfony/polyfill-mbstring": {
         "version": "v1.11.0"
@@ -259,6 +294,9 @@
     },
     "symfony/polyfill-php73": {
         "version": "v1.15.0"
+    },
+    "symfony/polyfill-php80": {
+        "version": "v1.18.0"
     },
     "symfony/routing": {
         "version": "4.2",
@@ -274,6 +312,9 @@
             "config/packages/test/routing.yaml",
             "config/routes.yaml"
         ]
+    },
+    "symfony/service-contracts": {
+        "version": "v2.1.3"
     },
     "symfony/stopwatch": {
         "version": "v4.2.7"
@@ -293,6 +334,9 @@
             "config/packages/translation.yaml",
             "translations/.gitignore"
         ]
+    },
+    "symfony/translation-contracts": {
+        "version": "v2.1.3"
     },
     "symfony/var-dumper": {
         "version": "v4.2.7"

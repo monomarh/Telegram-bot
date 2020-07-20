@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Service;
 
+use App\Entity\Location;
 use Forecast\Forecast;
 use stdClass;
 
@@ -21,17 +22,20 @@ class WeatherService
     }
 
     /**
+     * @param Location $location
+     *
      * @return stdClass
      */
-    public function getWholeWeather(): stdClass
+    public function getWholeWeather(Location $location): stdClass
     {
         return $this->forecast->get(
-            '53.9',
-            '27.56667',
-            null,
-            [
-                'units' => 'si',
-            ]
+            ...$location->getGeometry(),
+            ...[
+                null,
+                [
+                    'units' => 'si',
+                ]
+           ],
         );
     }
 }

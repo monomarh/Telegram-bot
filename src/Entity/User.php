@@ -31,32 +31,32 @@ class User
     private string $name;
 
     /**
-     * @var DateTimeInterface
+     * @var DateTimeInterface|null
      *
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private DateTimeInterface $birthday;
+    private ?DateTimeInterface $birthday;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(type="string", length=4, nullable=true)
      */
-    private string $locale;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private string $city;
+    private ?string $locale = 'en';
 
     /**
      * @var int
      *
      * @ORM\Column(type="integer")
      */
-    private int $userId;
+    private int $telegramUserId;
+
+    /**
+     * @var Location|null
+     *
+     * @ORM\ManyToOne(targetEntity="App\Entity\Location", cascade={"persist"})
+     */
+    private ?Location $location;
 
     /**
      * @return int|null
@@ -107,42 +107,41 @@ class User
     }
 
     /**
-     * @param string|null $locale
+     * @param string $locale
      */
-    public function setLocale(?string $locale): void
+    public function setLocale(string $locale): void
     {
         $this->locale = $locale;
     }
 
     /**
-     * @return string|null
-     */
-    public function getCity(): ?string
-    {
-        return $this->city;
-    }
-
-    /**
-     * @param string|null $city
-     */
-    public function setCity(?string $city): void
-    {
-        $this->city = $city;
-    }
-
-    /**
      * @return int
      */
-    public function getUserId(): int
+    public function getTelegramUserId(): int
     {
-        return $this->userId;
+        return $this->telegramUserId;
     }
 
     /**
-     * @param int $userId
+     * @param int $telegramUserId
      */
-    public function setUserId(int $userId): void
+    public function setTelegramUserId(int $telegramUserId): void
     {
-        $this->userId = $userId;
+        $this->telegramUserId = $telegramUserId;
+    }
+
+    /**
+     * @return Location|null
+     */
+    public function getLocation(): ?Location
+    {
+        return $this->location;
+    }
+    /**
+     * @param Location $location
+     */
+    public function setLocation(Location $location): void
+    {
+        $this->location = $location;
     }
 }

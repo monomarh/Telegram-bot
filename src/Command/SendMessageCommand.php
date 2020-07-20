@@ -50,9 +50,11 @@ class SendMessageCommand extends Command
      * @param InputInterface $input
      * @param OutputInterface $output
      *
+     * @return int
+     *
      * @throws Exception
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $users = $this->userRepository->findAll();
 
@@ -60,27 +62,32 @@ class SendMessageCommand extends Command
         $dayToLive = $currentDate->diff(new DateTime('2071-12-19'))->format('%a');
 
         foreach ($users as $user) {
-            $summaryWeatherAtWeek = $this->weatherService->getWholeWeather()->daily->summary;
-            $todayWeather = $this->weatherService->getWholeWeather()->daily->data[0];
+            if ($user->getLocation()) {
+                $wholeWeather = $this->weatherService->getWholeWeather($user->getLocation())->daily;
+                $todayWeather = $wholeWeather->data[0];
 
-            try {
-                $this->botMan->say(
-                    sprintf(
-                        'Hello %s. You have %s days to live. Probability of precipitation: %s%%. High temperature: %s℃. Low temperature: %s℃. Wind speed: %sm/s.',
-                        $user->getName(),
-                        $dayToLive,
-                        $todayWeather->precipProbability * 100,
-                        $todayWeather->temperatureHigh,
-                        $todayWeather->temperatureLow,
-                        $todayWeather->windSpeed
-                    )
-                    . (($currentDate->format('D') === 'Mon') ? sprintf(' %s', $summaryWeatherAtWeek) : ''),
-                    $user->getUserId(),
-                    TelegramDriver::class
-                );
-            } catch (Exception $e) {
-                $output->writeln(json_encode($e));
+                try {
+                    $this->botMan->say(
+                        sprintf(
+                            'Hello %s. You have %s days to live. Probability of precipitation: %s%%. High temperature: %s℃. Low temperature: %s℃. Wind speed: %sm/s.',
+                            $user->getName(),
+                            $dayToLive,
+                            $todayWeather->precipProbability * 100,
+                            $todayWeather->temperatureHigh,
+                            $todayWeather->temperatureLow,
+                            $todayWeather->windSpeed
+                        ) . (($currentDate->format('D') === 'Mon') ? sprintf(' %s', $wholeWeather->summary) : ''),
+                        $user->getTelegramUserId(),
+                        TelegramDriver::class
+                    );
+                } catch (Exception $e) {
+                    $output->writeln(json_encode($e, JSON_THROW_ON_ERROR));
+
+                    return 1;
+                }
             }
         }
+
+        return 0;
     }
 }

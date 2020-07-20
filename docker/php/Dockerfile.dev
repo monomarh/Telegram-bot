@@ -1,0 +1,26 @@
+FROM php:7.4-fpm-alpine
+
+COPY ./docker/php/configs/xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+
+RUN apk upgrade --no-cache --update \
+    && apk add --no-cache \
+        $PHPIZE_DEPS \
+        zip unzip libzip-dev postgresql-dev \
+    && pecl install xdebug-2.9.5 \
+    && docker-php-ext-enable xdebug \
+    && docker-php-ext-enable opcache \
+    && docker-php-ext-install pdo_pgsql \
+    && docker-php-ext-install zip
+
+WORKDIR /var/www/index
+
+COPY . .
+
+RUN curl -o /tmp/composer-setup.php https://getcomposer.org/installer \
+  && curl -o /tmp/composer-setup.sig https://composer.github.io/installer.sig \
+  && php -r "if (hash('SHA384', file_get_contents('/tmp/composer-setup.php')) !== trim(file_get_contents('/tmp/composer-setup.sig'))) { unlink('/tmp/composer-setup.php'); echo 'Invalid installer' . PHP_EOL; exit(1); }" \
+  && php /tmp/composer-setup.php --install-dir=/usr/bin --filename=composer
+
+RUN composer install
+
+ENTRYPOINT php-fpm -F
