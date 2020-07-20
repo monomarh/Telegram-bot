@@ -149,7 +149,7 @@ class Location
     }
 
     /**
-     *
+     * @return float[]
      */
     public function getGeometry(): array
     {
