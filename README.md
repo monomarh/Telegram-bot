@@ -11,6 +11,8 @@ Day Life Bot is a telegram bot for remind you of the essence of being. Every Day
 
 - PHP
 - Symfony
+- Docker
+- Travis as CI
 - Deployed on [heroku](https://www.heroku.com)
 
 ### Support or Contact
