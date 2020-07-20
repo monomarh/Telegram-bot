@@ -1,4 +1,5 @@
 ## Welcome to Day Life Bot on GitHub
+[![Build Status](https://travis-ci.com/monomarh/Telegram-bot.svg?branch=master)](https://travis-ci.com/monomarh/Telegram-bot)
 
 You can use the [link](https://monomarh.github.io/Telegram-bot/) to view readme in a beautiful way.
 
