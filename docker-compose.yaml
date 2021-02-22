@@ -18,7 +18,10 @@ services:
             dockerfile: ./docker/php/Dockerfile.${APP_ENV}
         restart: on-failure
         environment:
+            APP_ENV: ${APP_ENV}
             DATABASE_URL: postgres://${PSQL_USER}:${PSQL_PASSWORD}@db:5432/${PSQL_DATABASE}
+            XDEBUG_REMOTE_HOST: ${XDEBUG_REMOTE_HOST}
+            PHP_IDE_CONFIG: 'serverName=${XDEBUG_REMOTE_HOST:-host.docker.internal}'
         volumes:
             - ./:/var/www/index
 

@@ -2,7 +2,7 @@
 .gitignore
 
 .dockerignore
-docker-compose.*.yaml
+docker-compose.yaml
 docker/php/Dockerfile.*
 
 .idea/

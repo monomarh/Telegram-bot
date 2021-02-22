@@ -1,7 +1,5 @@
 FROM php:7.4-fpm-alpine
 
-COPY ./docker/php/configs/xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-
 RUN apk upgrade --no-cache --update \
     && apk add --no-cache \
         $PHPIZE_DEPS \
@@ -14,10 +12,13 @@ RUN apk upgrade --no-cache --update \
 
 WORKDIR /var/www/index
 
-COPY . .
+COPY ./docker/php/configs/xdebug.ini ${PHP_INI_DIR}/conf.d/docker-php-ext-xdebug.ini
 
 COPY --from=composer:1 /usr/bin/composer /usr/bin/composer
 
-RUN composer install
+COPY docker/php/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
+RUN chmod +x /usr/local/bin/docker-entrypoint
 
-ENTRYPOINT php-fpm -F
+ENTRYPOINT ["docker-entrypoint"]
+
+CMD ["php-fpm"]
