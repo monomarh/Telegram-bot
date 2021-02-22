@@ -19,14 +19,12 @@
         "symfony/console": "4.4.*",
         "symfony/dotenv": "4.4.*",
         "symfony/error-handler": "4.4.*",
-        "symfony/flex": "1.4",
+        "symfony/flex": "1.12.*",
         "symfony/framework-bundle": "4.4.*",
         "symfony/maker-bundle": "^1.11",
         "symfony/monolog-bundle": "^3.5",
         "symfony/orm-pack": "^1.0",
-        "symfony/thanks": "^1.2",
         "symfony/translation": "4.4.*",
-        "symfony/var-dumper": "4.4.*",
         "symfony/yaml": "4.4.*",
         "telegram-bot/api": "^2.3"
     },
@@ -76,6 +74,7 @@
         }
     },
     "require-dev": {
+        "symfony/var-dumper": "4.4.*",
         "heroku/heroku-buildpack-php": "^154.0",
         "symfony/test-pack": "^1.0"
     }
