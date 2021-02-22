@@ -1,6 +1,7 @@
 FROM php:7.4-fpm-alpine
 
-RUN apk upgrade --no-cache --update \
+RUN set -eux; \
+    apk upgrade --no-cache --update \
     && apk add --no-cache \
         $PHPIZE_DEPS \
         zip unzip libzip-dev postgresql-dev \

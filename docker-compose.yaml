@@ -19,7 +19,9 @@ services:
         restart: on-failure
         environment:
             APP_ENV: ${APP_ENV}
-            DATABASE_URL: postgres://${PSQL_USER}:${PSQL_PASSWORD}@db:5432/${PSQL_DATABASE}
+            PSQL_HOST: ${PSQL_HOST}
+            PSQL_PORT: ${PSQL_PORT}
+            DATABASE_URL: postgres://${PSQL_USER}:${PSQL_PASSWORD}@${PSQL_HOST}:${PSQL_PORT}/${PSQL_DATABASE}
             XDEBUG_REMOTE_HOST: ${XDEBUG_REMOTE_HOST}
             PHP_IDE_CONFIG: 'serverName=${XDEBUG_REMOTE_HOST:-host.docker.internal}'
         volumes:
@@ -29,9 +31,11 @@ services:
         image: postgres
         restart: always
         environment:
+            POSTGRES_DB: ${PSQL_DATABASE}
+            POSTGRES_USER: ${PSQL_USER}
             POSTGRES_PASSWORD: ${PSQL_PASSWORD}
         ports:
-            - 5432:5432
+            - ${PSQL_PORT}:5432
         volumes:
             - postgres_data:/var/lib/postgresql/data
 
