@@ -21,7 +21,6 @@ services:
             DATABASE_URL: postgres://${PSQL_USER}:${PSQL_PASSWORD}@db:5432/${PSQL_DATABASE}
         volumes:
             - ./:/var/www/index
-            - /var/www/index/vendor
 
     db:
         image: postgres
@@ -31,4 +30,7 @@ services:
         ports:
             - 5432:5432
         volumes:
-            - ./db-data:/var/lib/postgresql/data
+            - postgres_data:/var/lib/postgresql/data
+
+volumes:
+    postgres_data: {}
