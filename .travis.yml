@@ -7,4 +7,5 @@ before_install:
   - docker-compose up --build --detach php
 
 script:
+  - sleep 5
   - docker-compose exec php bin/phpunit
