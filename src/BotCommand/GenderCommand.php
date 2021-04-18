@@ -22,7 +22,7 @@ class GenderCommand extends BaseCommand
         if ($arguments) {
             $gender = strtolower($arguments);
 
-            if ($gender !== 'male' || $gender !== 'female') {
+            if ($gender !== 'male' && $gender !== 'female') {
                 $this->replyWithMessage(['text' => 'Allowed only male or female']);
                 return;
             }
