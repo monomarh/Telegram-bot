@@ -33,7 +33,8 @@ class DeathCommand extends BaseCommand
             } catch (\Exception $exception) {
                 $this->replyWithMessage(
                     [
-                        'text' => "Something went wrong, try again later.\n
+                        'text' =>
+                            "Something went wrong, try again later.\n
                             You need to set your gender, country and birthday"
                     ]
                 );
