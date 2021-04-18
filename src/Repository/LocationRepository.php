@@ -17,19 +17,12 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class LocationRepository extends ServiceEntityRepository
 {
-    /**
-     * @param ManagerRegistry $registry
-     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Location::class);
     }
 
     /**
-     * @param string $city
-     *
-     * @return Location Returns an array of Location objects
-     *
      * @throws NonUniqueResultException
      */
     public function findByCity(string $city): ?Location
@@ -43,10 +36,6 @@ class LocationRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param string $country
-     *
-     * @return Location Returns an array of Location objects
-     *
      * @throws NonUniqueResultException
      */
     public function findByCountry(string $country): ?Location

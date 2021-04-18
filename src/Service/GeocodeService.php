@@ -11,26 +11,15 @@ use Psr\Log\LoggerInterface;
 
 class GeocodeService
 {
-    /** @var Geocoder */
     private Geocoder $geocoder;
-
-    /** @var LoggerInterface */
     private LoggerInterface $logger;
 
-    /**
-     * @param LoggerInterface $logger
-     */
     public function __construct(LoggerInterface $logger)
     {
         $this->geocoder = new Geocoder($_ENV['GEOCODE_TOKEN']);
         $this->logger = $logger;
     }
 
-    /**
-     * @param Location $location
-     *
-     * @return array
-     */
     public function getGeometry(Location $location): array
     {
         try {
@@ -47,9 +36,6 @@ class GeocodeService
         }
     }
 
-    /**
-     * @return array
-     */
     private function getOptionsList(): array
     {
         return [
