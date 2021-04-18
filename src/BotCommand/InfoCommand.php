@@ -12,7 +12,7 @@ class InfoCommand extends BaseCommand
     protected $name = 'info';
 
     /** @var string */
-    protected $description = 'To get or set your name';
+    protected $description = 'To get full information about you';
 
     /**
      * {@inheritdoc}
