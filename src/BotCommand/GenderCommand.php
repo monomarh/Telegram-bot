@@ -33,7 +33,7 @@ class GenderCommand extends BaseCommand
         }
 
         $this->replyWithMessage([
-            'text' => $user->getName() ?? sprintf(self::REQUEST_MESSAGE, $this->getName())
+            'text' => $user->getGender() ?? sprintf(self::REQUEST_MESSAGE, $this->getName())
         ]);
     }
 }
