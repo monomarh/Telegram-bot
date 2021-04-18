@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Entity;
 
@@ -15,8 +15,6 @@ use Doctrine\ORM\Mapping as ORM;
 class User
 {
     /**
-     * @var int
-     *
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -24,122 +22,126 @@ class User
     private int $id;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=255)
      */
     private string $name;
 
     /**
-     * @var DateTimeInterface|null
-     *
+     * @ORM\Column(type="string", length=6, nullable=true)
+     */
+    private string $gender;
+
+    /**
      * @ORM\Column(type="datetime", nullable=true)
      */
     private ?DateTimeInterface $birthday;
 
     /**
-     * @var string|null
-     *
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private ?DateTimeInterface $deathday;
+
+    /**
      * @ORM\Column(type="string", length=4, nullable=true)
      */
     private ?string $locale = 'en';
 
     /**
-     * @var int
-     *
      * @ORM\Column(type="integer")
      */
     private int $telegramUserId;
 
     /**
-     * @var Location|null
-     *
      * @ORM\ManyToOne(targetEntity="App\Entity\Location", cascade={"persist"})
      */
     private ?Location $location;
 
-    /**
-     * @return int|null
-     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     */
     public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    /**
-     * @return DateTimeInterface|null
-     */
+    public function setGender(string $gender): void
+    {
+        $this->gender = $gender;
+    }
+
+    public function getGender(): string
+    {
+        return $this->gender;
+    }
+
     public function getBirthday(): ?DateTimeInterface
     {
         return $this->birthday;
     }
 
-    /**
-     * @param DateTimeInterface $birthday
-     */
+    public function getAge(): string
+    {
+        return $this->getBirthday()
+            ? (new \DateTimeImmutable())->diff($this->getBirthday())->format('%Yy%mm')
+            : '?';
+    }
+
     public function setBirthday(DateTimeInterface $birthday): void
     {
         $this->birthday = $birthday;
     }
 
-    /**
-     * @return string|null
-     */
+    public function getDeathday(): ?DateTimeInterface
+    {
+        return $this->deathday;
+    }
+
+    public function setDeathday(?DateTimeInterface $deathday): void
+    {
+        $this->deathday = $deathday;
+    }
+
+    public function getDaysToLive(): string
+    {
+        return $this->getDeathday()
+            ? (new \DateTimeImmutable())->diff($this->getDeathday())->format('%a')
+            : '?';
+    }
+
     public function getLocale(): ?string
     {
         return $this->locale;
     }
 
-    /**
-     * @param string $locale
-     */
     public function setLocale(string $locale): void
     {
         $this->locale = $locale;
     }
 
-    /**
-     * @return int
-     */
     public function getTelegramUserId(): int
     {
         return $this->telegramUserId;
     }
 
-    /**
-     * @param int $telegramUserId
-     */
-    public function setTelegramUserId(int $telegramUserId): void
+    public function setTelegramUserId(int $telegramUserId): self
     {
         $this->telegramUserId = $telegramUserId;
+
+        return $this;
     }
 
-    /**
-     * @return Location|null
-     */
     public function getLocation(): ?Location
     {
         return $this->location;
     }
-    /**
-     * @param Location $location
-     */
+
     public function setLocation(Location $location): void
     {
         $this->location = $location;

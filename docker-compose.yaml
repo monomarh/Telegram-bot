@@ -21,6 +21,7 @@ services:
             APP_ENV: ${APP_ENV}
             PSQL_HOST: ${PSQL_HOST}
             PSQL_PORT: ${PSQL_PORT}
+            TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
             DATABASE_URL: postgres://${PSQL_USER}:${PSQL_PASSWORD}@${PSQL_HOST}:${PSQL_PORT}/${PSQL_DATABASE}
             XDEBUG_REMOTE_HOST: ${XDEBUG_REMOTE_HOST}
             PHP_IDE_CONFIG: 'serverName=${XDEBUG_REMOTE_HOST:-host.docker.internal}'

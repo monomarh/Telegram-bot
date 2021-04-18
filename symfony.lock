@@ -1,10 +1,4 @@
 {
-    "botman/botman": {
-        "version": "2.4.1"
-    },
-    "botman/driver-telegram": {
-        "version": "1.5.2"
-    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -28,6 +22,9 @@
     },
     "doctrine/dbal": {
         "version": "v2.9.2"
+    },
+    "doctrine/deprecations": {
+        "version": "v0.5.3"
     },
     "doctrine/doctrine-bundle": {
         "version": "1.6",
@@ -87,17 +84,32 @@
     "doctrine/sql-formatter": {
         "version": "1.1.1"
     },
-    "evenement/evenement": {
-        "version": "v3.0.1"
-    },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.3"
     },
     "guhelski/forecast-php": {
         "version": "1.1.1"
     },
+    "guzzlehttp/guzzle": {
+        "version": "6.5.5"
+    },
+    "guzzlehttp/promises": {
+        "version": "1.4.1"
+    },
+    "guzzlehttp/psr7": {
+        "version": "1.8.1"
+    },
     "heroku/heroku-buildpack-php": {
         "version": "v154"
+    },
+    "illuminate/contracts": {
+        "version": "v6.20.23"
+    },
+    "illuminate/support": {
+        "version": "v6.20.23"
+    },
+    "irazasyed/telegram-bot-sdk": {
+        "version": "v2.3.0"
     },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
@@ -114,8 +126,8 @@
     "monolog/monolog": {
         "version": "1.25.3"
     },
-    "mpociot/pipeline": {
-        "version": "1.0.2"
+    "nesbot/carbon": {
+        "version": "2.46.0"
     },
     "nikic/php-parser": {
         "version": "v4.2.1"
@@ -129,9 +141,6 @@
     "opencage/geocode": {
         "version": "2.1.0"
     },
-    "opis/closure": {
-        "version": "3.1.6"
-    },
     "php": {
         "version": "7.4"
     },
@@ -141,32 +150,20 @@
     "psr/container": {
         "version": "1.0.0"
     },
+    "psr/http-message": {
+        "version": "1.0.1"
+    },
     "psr/log": {
         "version": "1.1.0"
     },
-    "react/cache": {
-        "version": "v0.5.0"
+    "psr/simple-cache": {
+        "version": "1.0.1"
     },
-    "react/dns": {
-        "version": "v0.4.17"
+    "ralouphie/getallheaders": {
+        "version": "3.0.3"
     },
-    "react/event-loop": {
-        "version": "v1.1.0"
-    },
-    "react/promise": {
-        "version": "v2.7.1"
-    },
-    "react/promise-timer": {
-        "version": "v1.5.1"
-    },
-    "react/socket": {
-        "version": "v0.8.12"
-    },
-    "react/stream": {
-        "version": "v1.1.0"
-    },
-    "spatie/macroable": {
-        "version": "1.0.0"
+    "roave/security-advisories": {
+        "version": "dev-latest"
     },
     "symfony/browser-kit": {
         "version": "v4.4.10"
@@ -388,12 +385,6 @@
     },
     "symfony/yaml": {
         "version": "v4.2.5"
-    },
-    "telegram-bot/api": {
-        "version": "v2.3.13"
-    },
-    "tightenco/collect": {
-        "version": "v5.8.12"
     },
     "webimpress/safe-writer": {
         "version": "2.0.0"
