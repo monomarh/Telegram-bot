@@ -30,7 +30,7 @@ class DeathCommand extends BaseCommand
                         $user->getAge()
                     )
                 );
-            } catch (\Exception $exception) {
+            } catch (\Throwable $exception) {
                 $this->replyWithMessage(
                     [
                         'text' =>
